@@ -1,0 +1,29 @@
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Exclude maven wrapper
+!/.mvn/wrapper/maven-wrapper.jar
+
+*.iws
+*.iml
+.idea/
+
+.project
+.classpath
+.settings/
+.factorypath
+
+rebel.xml
+
+# Hoverfly captured simulations
+**/hoverfly/captured
+
+# Generated when running WildFly Swarm 2018.1.x+
+audit.log
