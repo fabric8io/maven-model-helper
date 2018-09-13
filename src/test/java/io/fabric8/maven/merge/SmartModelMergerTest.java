@@ -1,4 +1,4 @@
-package io.fabric8.maven;
+package io.fabric8.maven.merge;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -10,11 +10,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
-public class ModelMergerTest {
+public class SmartModelMergerTest {
 
     @Test
     public void should_copy_dependencies() {
-        ModelMerger merger = new ModelMerger();
+        ModelMerger merger = new SmartModelMerger();
         Model source = new Model();
         source.setGroupId("org.example");
         source.setArtifactId("example");

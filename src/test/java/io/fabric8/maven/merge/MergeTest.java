@@ -1,10 +1,8 @@
-package io.fabric8.maven.cmd;
+package io.fabric8.maven.merge;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

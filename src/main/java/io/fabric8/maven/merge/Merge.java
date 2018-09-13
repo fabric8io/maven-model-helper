@@ -1,4 +1,4 @@
-package io.fabric8.maven.cmd;
+package io.fabric8.maven.merge;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,7 +18,7 @@ public class Merge {
         Model targetModel = Maven.readModel(targetPath);
         Model sourceModel = Maven.readModel(sourcePath);
 
-        ModelMerger merger = new ModelMerger();
+        ModelMerger merger = new SmartModelMerger();
         merger.merge(targetModel, sourceModel, false, null);
 
         Maven.writeModel(targetModel);
