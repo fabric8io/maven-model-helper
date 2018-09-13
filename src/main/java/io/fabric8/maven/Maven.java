@@ -16,6 +16,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -82,7 +83,7 @@ public final class Maven {
             try (OutputStream os = Files.newOutputStream(pom);
                  OutputStreamWriter ow = new OutputStreamWriter(os)) {
                 MavenJDOMWriter writer = new MavenJDOMWriter();
-                writer.write(model, document, "UTF-8", ow);
+                writer.write(model, document, ow, Format.getPrettyFormat());
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write POM file: " + pom, e);
             }
