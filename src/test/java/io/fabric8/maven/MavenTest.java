@@ -28,7 +28,7 @@ public class MavenTest {
         assertThat(model).isNotNull();
         assertThat(model.getPomFile().getAbsolutePath()).isEqualTo(basePom.toAbsolutePath().toString());
         assertThat(model.getParent().getGroupId()).isEqualTo("org.jboss");
-        assertThat(model.getArtifactId()).isEqualTo("maven-model-interpreter");
+        assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
     }
 
     @Test

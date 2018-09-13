@@ -7,7 +7,7 @@
     <version>29</version>
   </parent>
   <groupId>io.fabric8</groupId>
-  <artifactId>maven-model-interpreter</artifactId>
+  <artifactId>maven-model-helper</artifactId>
   <version>5-SNAPSHOT</version>
   <dependencies>
     <dependency>
@@ -79,9 +79,9 @@
     </plugins>
   </build>
   <scm>
-    <connection>scm:git:git://github.com/fabric8-launcher/maven-model-interpreter.git</connection>
-    <developerConnection>scm:git:git@github.com:fabric8-launcher/maven-model-interpreter.git</developerConnection>
-    <url>http://github.com/fabric8-launcher/maven-model-interpreter</url>
+    <connection>scm:git:git://github.com/fabric8-launcher/maven-model-helper.git</connection>
+    <developerConnection>scm:git:git@github.com:fabric8-launcher/maven-model-helper.git</developerConnection>
+    <url>http://github.com/fabric8-launcher/maven-model-helper</url>
     <tag>HEAD</tag>
   </scm>
   <distributionManagement>
