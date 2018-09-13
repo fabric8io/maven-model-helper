@@ -8,7 +8,7 @@
   </parent>
   <groupId>io.fabric8</groupId>
   <artifactId>maven-model-interpreter</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>2</version>
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -82,7 +82,7 @@
     <connection>scm:git:git://github.com/fabric8-launcher/maven-model-interpreter.git</connection>
     <developerConnection>scm:git:git@github.com:fabric8-launcher/maven-model-interpreter.git</developerConnection>
     <url>http://github.com/fabric8-launcher/maven-model-interpreter</url>
-    <tag>HEAD</tag>
+    <tag>v2</tag>
   </scm>
   <distributionManagement>
     <snapshotRepository>
