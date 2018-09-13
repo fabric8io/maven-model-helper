@@ -12,19 +12,16 @@ public class SmartModelMerger extends ModelMerger {
 
     @Override
     protected Object getDependencyKey(Dependency dependency) {
-        return new DependencyKey(dependency.getGroupId(), dependency.getArtifactId());
+        return new DependencyKey(dependency);
     }
 
     // Maven's Dependency class does not implement equals/hashCode
     private class DependencyKey {
 
-        private final String groupId;
+        private final Dependency dependency;
 
-        private final String artifactId;
-
-        private DependencyKey(String groupId, String artifactId) {
-            this.groupId = groupId;
-            this.artifactId = artifactId;
+        private DependencyKey(Dependency dependency) {
+            this.dependency = dependency;
         }
 
         @Override
@@ -32,13 +29,13 @@ public class SmartModelMerger extends ModelMerger {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             DependencyKey that = (DependencyKey) o;
-            return Objects.equals(groupId, that.groupId) &&
-                    Objects.equals(artifactId, that.artifactId);
+            return Objects.equals(dependency.getGroupId(), that.dependency.getGroupId()) &&
+                    Objects.equals(dependency.getArtifactId(), that.dependency.getArtifactId());
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(groupId, artifactId);
+            return Objects.hash(dependency.getGroupId(), dependency.getArtifactId());
         }
     }
 }
