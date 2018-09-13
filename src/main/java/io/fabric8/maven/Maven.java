@@ -83,7 +83,9 @@ public final class Maven {
             try (OutputStream os = Files.newOutputStream(pom);
                  OutputStreamWriter ow = new OutputStreamWriter(os)) {
                 MavenJDOMWriter writer = new MavenJDOMWriter();
-                writer.write(model, document, ow, Format.getPrettyFormat());
+                Format format = Format.getPrettyFormat();
+                format.setLineSeparator(System.lineSeparator());
+                writer.write(model, document, ow, format);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write POM file: " + pom, e);
             }
