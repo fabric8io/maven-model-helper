@@ -1,4 +1,4 @@
-# maven-model-interpreter
+# maven-model-helper
 
 A library to parse Maven descriptors (pom.xml) and write changes to the model preserving the original comments
 
