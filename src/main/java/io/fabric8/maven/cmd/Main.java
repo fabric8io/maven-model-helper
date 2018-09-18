@@ -27,13 +27,13 @@ public class Main {
                 if (args.length < 3) throw new AssertionError("Insufficient arguments:" + args.length);
                 merge(args[1], copyOfRange(args, 2, args.length));
                 break;
-            case "replace-gav":
+            case "update-gav":
                 if (args.length != 5) throw new AssertionError("Insufficient arguments:" + args.length);
-                replaceGAV(args[1], args[2], args[3], args[4]);
+                updateGAV(args[1], args[2], args[3], args[4]);
                 break;
-            case "update-parent":
+            case "update-parent-gav":
                 if (args.length != 4) throw new AssertionError("Insufficient arguments:" + args.length);
-                updateParentPom(args[1], args[2], args[3]);
+                updateParentGAV(args[1], args[2], args[3]);
             default:
                 break;
         }
@@ -54,7 +54,7 @@ public class Main {
         Maven.writeModel(targetModel);
     }
 
-    private static void replaceGAV(String target, String groupId, String artifactId, String version) {
+    private static void updateGAV(String target, String groupId, String artifactId, String version) {
         Path targetPath = Paths.get(target).toAbsolutePath();
         Model targetModel = Maven.readModel(targetPath);
         targetModel.setGroupId(groupId);
@@ -63,7 +63,7 @@ public class Main {
         Maven.writeModel(targetModel);
     }
 
-    private static void updateParentPom(String target, String groupId, String artifactId) {
+    private static void updateParentGAV(String target, String groupId, String artifactId) {
         Path targetPath = Paths.get(target).toAbsolutePath();
         Model targetModel = Maven.readModel(targetPath);
         Parent parent = targetModel.getParent();
