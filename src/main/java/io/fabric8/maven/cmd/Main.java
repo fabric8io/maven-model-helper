@@ -34,6 +34,11 @@ public class Main {
             case "update-parent-gav":
                 if (args.length != 4) throw new AssertionError("Insufficient arguments:" + args.length);
                 updateParentGAV(args[1], args[2], args[3]);
+                break;
+            case "update-metadata":
+                if (args.length != 4) throw new AssertionError("Insufficient arguments:" + args.length);
+                updateMetadata(args[1], args[2], args[3]);
+                break;
             default:
                 break;
         }
@@ -76,4 +81,11 @@ public class Main {
         Maven.writeModel(targetModel);
     }
 
+    private static void updateMetadata(String target, String name, String description) {
+        Path targetPath = Paths.get(target).toAbsolutePath();
+        Model targetModel = Maven.readModel(targetPath);
+        targetModel.setName(name);
+        targetModel.setDescription(description);
+        Maven.writeModel(targetModel);
+    }
 }
