@@ -8,7 +8,7 @@
   </parent>
   <groupId>io.fabric8</groupId>
   <artifactId>maven-model-helper</artifactId>
-  <version>11-SNAPSHOT</version>
+  <version>11</version>
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -82,7 +82,7 @@
     <connection>scm:git:git://github.com/fabric8-launcher/maven-model-helper.git</connection>
     <developerConnection>scm:git:git@github.com:fabric8-launcher/maven-model-helper.git</developerConnection>
     <url>http://github.com/fabric8-launcher/maven-model-helper</url>
-    <tag>HEAD</tag>
+    <tag>v11</tag>
   </scm>
   <distributionManagement>
     <snapshotRepository>
