@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -25,6 +26,15 @@ public final class Maven {
 
     private Maven() {
         throw new IllegalAccessError("Utility class");
+    }
+
+    /**
+     * A String version that makes it easier to be called from other languages
+     *
+     * @see #readModel(Path)
+     */
+    public static Model readModel(String path) {
+        return readModel(Paths.get(path));
     }
 
     /**

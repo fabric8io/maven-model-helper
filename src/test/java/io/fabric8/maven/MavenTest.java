@@ -32,6 +32,16 @@ public class MavenTest {
     }
 
     @Test
+    public void should_read_model_string() {
+        Path basePom = Paths.get("pom.xml");
+        Model model = Maven.readModel(basePom.toAbsolutePath().toString());
+        assertThat(model).isNotNull();
+        assertThat(model.getPomFile().getAbsolutePath()).isEqualTo(basePom.toAbsolutePath().toString());
+        assertThat(model.getParent().getGroupId()).isEqualTo("org.jboss");
+        assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
+    }
+
+    @Test
     public void should_write_model() throws IOException {
         File pom = temporaryFolder.newFile("temp-pom.xml");
         Model model = new Model();
