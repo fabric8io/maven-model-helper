@@ -26,7 +26,7 @@ public class SmartModelMerger extends ModelMerger {
 
     @Override
     protected Object getProfileKey(Profile profile) {
-        return new ProfileKey(profile);
+        return profile.getId();
     }
 
     @Override
@@ -89,28 +89,6 @@ public class SmartModelMerger extends ModelMerger {
         @Override
         public int hashCode() {
             return Objects.hash(dependency.getGroupId(), dependency.getArtifactId());
-        }
-    }
-
-    // Maven's Profile class does not implement equals/hashCode
-    private class ProfileKey {
-        private final Profile profile;
-
-        private ProfileKey(Profile profile) {
-            this.profile = profile;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ProfileKey that = (ProfileKey) o;
-            return Objects.equals(profile.getId(), that.profile.getId());
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(profile.getId());
         }
     }
 }
