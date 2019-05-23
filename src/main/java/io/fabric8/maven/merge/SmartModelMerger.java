@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.apache.maven.model.Dependency;
@@ -21,7 +20,7 @@ public class SmartModelMerger extends ModelMerger {
 
     @Override
     protected Object getDependencyKey(Dependency dependency) {
-        return new DependencyKey(dependency);
+        return dependency.getGroupId() + ":" + dependency.getArtifactId();
     }
 
     @Override
@@ -65,30 +64,6 @@ public class SmartModelMerger extends ModelMerger {
             }
 
             target.setProfiles(new ArrayList<>(merged.values()));
-        }
-    }
-
-    // Maven's Dependency class does not implement equals/hashCode
-    private class DependencyKey {
-
-        private final Dependency dependency;
-
-        private DependencyKey(Dependency dependency) {
-            this.dependency = dependency;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            DependencyKey that = (DependencyKey) o;
-            return Objects.equals(dependency.getGroupId(), that.dependency.getGroupId()) &&
-                    Objects.equals(dependency.getArtifactId(), that.dependency.getArtifactId());
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(dependency.getGroupId(), dependency.getArtifactId());
         }
     }
 }
