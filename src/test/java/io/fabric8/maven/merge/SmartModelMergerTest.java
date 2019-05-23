@@ -6,17 +6,17 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Profile;
 import org.apache.maven.model.merge.ModelMerger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
-public class SmartModelMergerTest {
+class SmartModelMergerTest {
 
     @Test
-    public void should_copy_dependencies() {
+    void should_copy_dependencies() {
         ModelMerger merger = new SmartModelMerger();
         Model source = new Model();
         source.setGroupId("org.example");
