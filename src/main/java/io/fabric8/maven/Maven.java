@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,17 +45,31 @@ public final class Maven {
      * @return the maven {@link Model}
      */
     public static Model readModel(Path pom) {
-        Model model;
-        MavenXpp3Reader reader = new MavenXpp3Reader();
         try (BufferedReader br = Files.newBufferedReader(pom)) {
-            model = reader.read(br);
+            Model model = readModel(br);
             model.setPomFile(pom.toFile());
+            return model;
+        } catch (IOException io) {
+            throw new UncheckedIOException("Error while reading pom.xml", io);
+        }
+    }
+
+    /**
+     * Read the {@link Path} as a {@link Model}
+     *
+     * @param rdr a Reader on the contents of a pom file
+     * @return the maven {@link Model}
+     */
+    public static Model readModel(Reader rdr) {
+        try {
+            MavenXpp3Reader reader = new MavenXpp3Reader();
+            Model model = reader.read(rdr);
+            return model;
         } catch (IOException io) {
             throw new UncheckedIOException("Error while reading pom.xml", io);
         } catch (XmlPullParserException e) {
             throw new RuntimeException("Error while parsing pom.xml", e);
         }
-        return model;
     }
 
     /**
