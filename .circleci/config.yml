@@ -15,13 +15,13 @@ jobs: # a collection of steps
 
       - run: ./mvnw clean install -DskipTests # gets the project dependencies
 
+      - run: ./mvnw install # run the actual tests
+
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
           key: dependencies-{{ checksum "pom.xml" }}
 
-      - run: ./mvnw install # run the actual tests
-
-      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
+      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
           # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: target/surefire-reports
