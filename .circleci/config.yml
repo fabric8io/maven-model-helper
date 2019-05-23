@@ -3,7 +3,7 @@ jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
 
     docker: # run the steps with Docker
-      - image: circleci/openjdk:8-jdk-browsers # ...with this image as the primary container; this is where all `steps` will run
+      - image: jboss/base-jdk:8
 
     steps: # a collection of executable commands
 
@@ -13,14 +13,14 @@ jobs: # a collection of steps
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           key: dependencies-{{ checksum "pom.xml" }}
 
-      - run: mvn clean install -DskipTests # gets the project dependencies
+      - run: ./mvnw clean install -DskipTests # gets the project dependencies
 
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
           key: dependencies-{{ checksum "pom.xml" }}
 
-      - run: mvn test # run the actual tests
+      - run: ./mvnw install # run the actual tests
 
       - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
           # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
