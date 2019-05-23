@@ -4,11 +4,14 @@
   <parent>
     <groupId>org.jboss</groupId>
     <artifactId>jboss-parent</artifactId>
-    <version>34</version>
+    <version>35</version>
   </parent>
   <groupId>io.fabric8</groupId>
   <artifactId>maven-model-helper</artifactId>
   <version>14-SNAPSHOT</version>
+  <properties>
+    <version.surefire.plugin>3.0.0-M3</version.surefire.plugin>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
