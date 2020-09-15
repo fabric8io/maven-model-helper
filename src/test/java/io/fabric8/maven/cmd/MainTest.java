@@ -1,5 +1,6 @@
 package io.fabric8.maven.cmd;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -7,6 +8,7 @@ import io.fabric8.maven.Maven;
 import org.apache.maven.model.Model;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.xmlunit.assertj.XmlAssert;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,6 +29,26 @@ class MainTest {
         };
         Main.main(args);
         assertThat(target).hasSameTextualContentAs(result);
+    }
+
+    @Test
+    void should_keep_properties_order_on_merge(@TempDir Path tmpDir) throws Exception {
+        Path target = Paths.get(getClass().getResource("properties/target-pom.xml").toURI());
+        Path source = Paths.get(getClass().getResource("properties/source-pom.xml").toURI());
+        Path result = Paths.get(getClass().getResource("properties/result-pom.xml").toURI());
+
+        Path newTarget = tmpDir.resolve("target-pom.xml");
+        Files.copy(target, newTarget);
+
+        String[] args = {
+                "merge",
+                newTarget.toString(),
+                source.toString()
+        };
+        Main.main(args);
+        XmlAssert.assertThat(newTarget.toFile()).and(result.toFile())
+                .normalizeWhitespace()
+                .areIdentical();
     }
 
     @Test

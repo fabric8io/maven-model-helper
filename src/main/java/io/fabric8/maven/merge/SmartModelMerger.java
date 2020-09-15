@@ -5,9 +5,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.InputLocation;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.ModelBase;
 import org.apache.maven.model.Profile;
@@ -21,6 +23,21 @@ public class SmartModelMerger extends ModelMerger {
     @Override
     protected Object getDependencyKey(Dependency dependency) {
         return dependency.getGroupId() + ":" + dependency.getArtifactId();
+    }
+
+    @Override
+    protected void mergeModelBase_Properties(ModelBase target, ModelBase source, boolean sourceDominant, Map<Object, Object> context) {
+        Properties merged = new LinkedProperties();
+        if (sourceDominant) {
+            merged.putAll(target.getProperties());
+            merged.putAll(source.getProperties());
+        } else {
+            merged.putAll(source.getProperties());
+            merged.putAll(target.getProperties());
+        }
+        target.setProperties(merged);
+        target.setLocation("properties", InputLocation.merge(target.getLocation("properties"),
+                                                             source.getLocation("properties"), sourceDominant));
     }
 
     @Override
