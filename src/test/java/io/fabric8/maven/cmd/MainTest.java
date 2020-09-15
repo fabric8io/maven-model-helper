@@ -32,7 +32,7 @@ class MainTest {
     }
 
     @Test
-    void should_keep_properties_order_on_merge(@TempDir Path tmpDir) throws Exception {
+    void should_keep_ordered_properties_last_on_merge(@TempDir Path tmpDir) throws Exception {
         Path target = Paths.get(getClass().getResource("properties/target-pom.xml").toURI());
         Path source = Paths.get(getClass().getResource("properties/source-pom.xml").toURI());
         Path result = Paths.get(getClass().getResource("properties/result-pom.xml").toURI());

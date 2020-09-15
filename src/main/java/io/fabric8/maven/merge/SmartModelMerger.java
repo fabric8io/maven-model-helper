@@ -27,7 +27,7 @@ public class SmartModelMerger extends ModelMerger {
 
     @Override
     protected void mergeModelBase_Properties(ModelBase target, ModelBase source, boolean sourceDominant, Map<Object, Object> context) {
-        Properties merged = new LinkedProperties();
+        Properties merged = new SortedProperties();
         if (sourceDominant) {
             merged.putAll(target.getProperties());
             merged.putAll(source.getProperties());
