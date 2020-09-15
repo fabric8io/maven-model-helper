@@ -26,7 +26,7 @@ class MainTest {
                 source.toString()
         };
         Main.main(args);
-        assertThat(target).hasSameContentAs(result);
+        assertThat(target).hasSameTextualContentAs(result);
     }
 
     @Test
