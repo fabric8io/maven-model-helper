@@ -150,15 +150,21 @@ class MavenJDOMWriter {
             Counter innerCounter = new Counter(counter.getDepth() + 1);
             while (it.hasNext()) {
                 String key = (String) it.next();
-                findAndReplaceSimpleElement(innerCounter, element, key, (String) props.get(key), null);
+                if ((element.getChild(key, parent.getNamespace()) == null)) {
+                    // If it is a new entry, append instead of messing with the existing contents
+                    Element newProperty = factory.element(key, parent.getNamespace()).setText((String) props.get(key));
+                    element.addContent(newProperty);
+                } else {
+                    findAndReplaceSimpleElement(innerCounter, element, key, (String) props.get(key), null);
+                }
             }
 
-            List<String> lst = new ArrayList<>(props.keySet());
+            // Remove properties that no longer exist
             it = element.getChildren().iterator();
             while (it.hasNext()) {
                 Element elem = (Element) it.next();
                 String key = elem.getName();
-                if (!lst.contains(key)) {
+                if (!props.containsKey(key)) {
                     it.remove();
                 }
             }
@@ -177,11 +183,11 @@ class MavenJDOMWriter {
      */
     protected Element findAndReplaceSimpleElement(Counter counter, Element parent, String name, String text,
                                                   String defaultValue) {
-        if ((defaultValue != null) && (text != null) && defaultValue.equals(text)) {
+        if ((defaultValue != null) && defaultValue.equals(text)) {
             Element element = parent.getChild(name, parent.getNamespace());
             // if exist and is default value or if doesn't exist.. just keep the
             // way it is..
-            if (((element != null) && defaultValue.equals(element.getText())) || (element == null)) {
+            if (element == null || defaultValue.equals(element.getText())) {
                 return element;
             }
         }
