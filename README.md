@@ -1,4 +1,4 @@
-# maven-model-helper
+# Maven Model Helper
 
 [![CircleCI](https://circleci.com/gh/fabric8-launcher/maven-model-helper.svg?style=svg)](https://circleci.com/gh/fabric8-launcher/maven-model-helper)
 
