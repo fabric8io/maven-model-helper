@@ -105,6 +105,7 @@
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <serverId>ossrh</serverId>
+                    <stagingProgressTimeoutMinutes>60</stagingProgressTimeoutMinutes>
                 </configuration>
             </plugin>
         </plugins>
