@@ -6,10 +6,12 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 import org.apache.maven.model.Model;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.xmlunit.assertj.XmlAssert;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,6 +60,25 @@ class MavenTest {
         Maven.writeModel(model);
         assertThat(Files.readAllLines(pom.toPath()).stream().map(String::trim))
                 .contains("<groupId>org.example</groupId>", "<artifactId>example</artifactId>", "<version>1.0</version>");
+    }
+
+    @Test
+    void should_write_model_with_sorted_properties(@TempDir Path tempDir) throws IOException {
+        Path basePom = Paths.get("pom.xml");
+        Model model = Maven.readModel(basePom.toAbsolutePath().toString());
+
+        Properties properties = model.getProperties();
+        assertThat(properties).isInstanceOf(SortedProperties.class);
+
+        properties.put("c", "three");
+        properties.put("a", "one");
+        properties.put("b", "two");
+
+        // Write pom
+        Path pom = tempDir.resolve("temp-pom.xml");
+        Maven.writeModel(model, pom);
+        assertThat(Files.readAllLines(pom).stream().map(String::trim))
+                .containsSequence("<a>one</a>", "<b>two</b>", "<c>three</c>");
     }
 
 }

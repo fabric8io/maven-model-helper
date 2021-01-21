@@ -1,10 +1,10 @@
-package io.fabric8.maven.merge;
+package io.fabric8.maven;
 
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
-class SortedProperties extends Properties {
+public class SortedProperties extends Properties {
 
     private static final long serialVersionUID = 1L;
 

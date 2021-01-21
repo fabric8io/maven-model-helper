@@ -48,6 +48,11 @@ public final class Maven {
         try (BufferedReader br = Files.newBufferedReader(pom)) {
             Model model = readModel(br);
             model.setPomFile(pom.toFile());
+            // https://github.com/fabric8-launcher/maven-model-helper/issues/43
+            SortedProperties sortedProps = new SortedProperties();
+            sortedProps.putAll(model.getProperties());
+            model.setProperties(sortedProps);
+
             return model;
         } catch (IOException io) {
             throw new UncheckedIOException("Error while reading pom.xml", io);
