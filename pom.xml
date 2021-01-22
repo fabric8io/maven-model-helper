@@ -8,7 +8,7 @@
     </parent>
     <groupId>io.fabric8</groupId>
     <artifactId>maven-model-helper</artifactId>
-    <version>18-SNAPSHOT</version>
+    <version>18</version>
     <properties>
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
@@ -114,7 +114,7 @@
         <connection>scm:git:git://github.com/fabric8-launcher/maven-model-helper.git</connection>
         <developerConnection>scm:git:git@github.com:fabric8-launcher/maven-model-helper.git</developerConnection>
         <url>http://github.com/fabric8-launcher/maven-model-helper</url>
-        <tag>HEAD</tag>
+        <tag>v18</tag>
     </scm>
     <distributionManagement>
         <snapshotRepository>
