@@ -52,7 +52,6 @@ public final class Maven {
             SortedProperties sortedProps = new SortedProperties();
             sortedProps.putAll(model.getProperties());
             model.setProperties(sortedProps);
-
             return model;
         } catch (IOException io) {
             throw new UncheckedIOException("Error while reading pom.xml", io);
@@ -69,6 +68,10 @@ public final class Maven {
         try {
             MavenXpp3Reader reader = new MavenXpp3Reader();
             Model model = reader.read(rdr);
+            // https://github.com/fabric8-launcher/maven-model-helper/issues/44
+            SortedProperties sortedProps = new SortedProperties();
+            sortedProps.putAll(model.getProperties());
+            model.setProperties(sortedProps);
             return model;
         } catch (IOException io) {
             throw new UncheckedIOException("Error while reading pom.xml", io);

@@ -1,6 +1,7 @@
 package io.fabric8.maven;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -80,5 +81,25 @@ class MavenTest {
         assertThat(Files.readAllLines(pom).stream().map(String::trim))
                 .containsSequence("<a>one</a>", "<b>two</b>", "<c>three</c>");
     }
+
+    @Test
+    void should_write_model_with_sorted_properties_using_reader(@TempDir Path tempDir) throws IOException {
+        Path basePom = Paths.get("pom.xml");
+        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+
+        Properties properties = model.getProperties();
+        assertThat(properties).isInstanceOf(SortedProperties.class);
+
+        properties.put("c", "three");
+        properties.put("a", "one");
+        properties.put("b", "two");
+
+        // Write pom
+        Path pom = tempDir.resolve("temp-pom.xml");
+        Maven.writeModel(model, pom);
+        assertThat(Files.readAllLines(pom).stream().map(String::trim))
+                .containsSequence("<a>one</a>", "<b>two</b>", "<c>three</c>");
+    }
+
 
 }
