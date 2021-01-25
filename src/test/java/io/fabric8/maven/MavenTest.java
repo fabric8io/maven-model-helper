@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Properties;
 
 import org.apache.maven.model.Model;
@@ -33,12 +35,12 @@ class MavenTest {
 
     @Test
     void should_read_model_using_reader() {
-        Model model = Maven.readModel(new StringReader("<project><groupId>org.jboss</groupId><artifactId>maven-model-helper</artifactId></project>"));
+        Model model = Maven.readModel(
+                new StringReader("<project><groupId>org.jboss</groupId><artifactId>maven-model-helper</artifactId></project>"));
         assertThat(model).isNotNull();
         assertThat(model.getGroupId()).isEqualTo("org.jboss");
         assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
     }
-
 
     @Test
     void should_read_model_string() {
@@ -101,5 +103,19 @@ class MavenTest {
                 .containsSequence("<a>one</a>", "<b>two</b>", "<c>three</c>");
     }
 
+    @Test
+    void should_preserve_parent_relative_path(@TempDir Path tempDir) throws Exception {
+        URL resource = getClass().getResource("parent/parent-pom.xml");
+        Path parentPom = Paths.get(resource.toURI());
+        Path newPath = tempDir.resolve("new-pom.xml");
+        Model model = Maven.readModel(parentPom);
+        assertThat(model.getParent().getRelativePath()).isNotNull();
+
+        Maven.writeModel(model, newPath);
+        XmlAssert.assertThat(newPath)
+                .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
+                .valueByXPath("//maven:project/maven:parent/maven:relativePath")
+                .isEqualTo("../../pom.xml");
+    }
 
 }
