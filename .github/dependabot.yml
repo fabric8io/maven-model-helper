@@ -1,0 +1,12 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "07:00"
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: org.jdom:jdom
+    versions:
+    - "< 3, >= 2.a"
