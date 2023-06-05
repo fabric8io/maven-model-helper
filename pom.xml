@@ -16,6 +16,7 @@
         <version.formatter.plugin>2.23.0</version.formatter.plugin>
         <version.impsort.plugin>1.9.0</version.impsort.plugin>
         <version.surefire.plugin>3.1.0</version.surefire.plugin>
+        <format.skip>false</format.skip>
     </properties>
     <dependencies>
         <dependency>
@@ -78,6 +79,7 @@
                 <configuration>
                     <configFile>eclipse-format.xml</configFile>
                     <lineEnding>LF</lineEnding>
+                    <skip>${format.skip}</skip>
                 </configuration>
             </plugin>
             <plugin>
