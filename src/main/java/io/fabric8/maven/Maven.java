@@ -30,6 +30,18 @@ public final class Maven {
     }
 
     /**
+     * Create a new Maven {@link Model}
+     *
+     * @return a new {@link Model}
+     */
+    public static Model newModel() {
+        Model model = new Model();
+        model.setModelVersion("4.0.0");
+        model.setProperties(new SortedProperties());
+        return model;
+    }
+
+    /**
      * A String version that makes it easier to be called from other languages
      *
      * @see #readModel(Path)
@@ -114,7 +126,7 @@ public final class Maven {
                 throw new UncheckedIOException("Could not read POM file: " + pom, e);
             }
             try (OutputStream os = Files.newOutputStream(pom);
-                 OutputStreamWriter ow = new OutputStreamWriter(os)) {
+                    OutputStreamWriter ow = new OutputStreamWriter(os)) {
                 MavenJDOMWriter writer = new MavenJDOMWriter();
                 Format format = Format.getPrettyFormat();
                 format.setLineSeparator(System.lineSeparator());

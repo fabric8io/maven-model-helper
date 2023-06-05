@@ -1,16 +1,17 @@
 package io.fabric8.maven.cmd;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import io.fabric8.maven.Maven;
 import org.apache.maven.model.Model;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.xmlunit.assertj.XmlAssert;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.fabric8.maven.Maven;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>

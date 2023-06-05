@@ -1,5 +1,7 @@
 package io.fabric8.maven.merge;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Arrays;
 
 import org.apache.maven.model.Dependency;
@@ -7,8 +9,6 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Profile;
 import org.apache.maven.model.merge.ModelMerger;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -27,7 +27,6 @@ class SmartModelMergerTest {
         dependency.setGroupId("foo");
         dependency.setArtifactId("bar");
         source.addDependency(dependency);
-
 
         Model target = new Model();
         target.setGroupId("org.example");

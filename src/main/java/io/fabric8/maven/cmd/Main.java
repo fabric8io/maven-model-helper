@@ -1,15 +1,16 @@
 package io.fabric8.maven.cmd;
 
+import static java.util.Arrays.copyOfRange;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import io.fabric8.maven.Maven;
-import io.fabric8.maven.merge.SmartModelMerger;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.merge.ModelMerger;
 
-import static java.util.Arrays.copyOfRange;
+import io.fabric8.maven.Maven;
+import io.fabric8.maven.merge.SmartModelMerger;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -24,19 +25,23 @@ public class Main {
 
         switch (args[0]) {
             case "merge":
-                if (args.length < 3) throw new AssertionError("Insufficient arguments:" + args.length);
+                if (args.length < 3)
+                    throw new AssertionError("Insufficient arguments:" + args.length);
                 merge(args[1], copyOfRange(args, 2, args.length));
                 break;
             case "update-gav":
-                if (args.length != 5) throw new AssertionError("Insufficient arguments:" + args.length);
+                if (args.length != 5)
+                    throw new AssertionError("Insufficient arguments:" + args.length);
                 updateGAV(args[1], args[2], args[3], args[4]);
                 break;
             case "update-parent-gav":
-                if (args.length != 4) throw new AssertionError("Insufficient arguments:" + args.length);
+                if (args.length != 4)
+                    throw new AssertionError("Insufficient arguments:" + args.length);
                 updateParentGAV(args[1], args[2], args[3]);
                 break;
             case "update-metadata":
-                if (args.length != 4) throw new AssertionError("Insufficient arguments:" + args.length);
+                if (args.length != 4)
+                    throw new AssertionError("Insufficient arguments:" + args.length);
                 updateMetadata(args[1], args[2], args[3]);
                 break;
             default:

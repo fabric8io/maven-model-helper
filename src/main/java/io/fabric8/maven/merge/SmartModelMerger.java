@@ -8,13 +8,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import io.fabric8.maven.SortedProperties;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.InputLocation;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.ModelBase;
 import org.apache.maven.model.Profile;
 import org.apache.maven.model.merge.ModelMerger;
+
+import io.fabric8.maven.SortedProperties;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -27,7 +28,8 @@ public class SmartModelMerger extends ModelMerger {
     }
 
     @Override
-    protected void mergeModelBase_Properties(ModelBase target, ModelBase source, boolean sourceDominant, Map<Object, Object> context) {
+    protected void mergeModelBase_Properties(ModelBase target, ModelBase source, boolean sourceDominant,
+            Map<Object, Object> context) {
         Properties merged = new SortedProperties();
         if (sourceDominant) {
             merged.putAll(target.getProperties());
@@ -38,7 +40,7 @@ public class SmartModelMerger extends ModelMerger {
         }
         target.setProperties(merged);
         target.setLocation("properties", InputLocation.merge(target.getLocation("properties"),
-                                                             source.getLocation("properties"), sourceDominant));
+                source.getLocation("properties"), sourceDominant));
     }
 
     @Override
@@ -47,7 +49,8 @@ public class SmartModelMerger extends ModelMerger {
     }
 
     @Override
-    protected void mergeModelBase_Modules(ModelBase target, ModelBase source, boolean sourceDominant, Map<Object, Object> context) {
+    protected void mergeModelBase_Modules(ModelBase target, ModelBase source, boolean sourceDominant,
+            Map<Object, Object> context) {
         Set<String> set = new LinkedHashSet<>();
         set.addAll(source.getModules());
         set.addAll(target.getModules());
@@ -56,7 +59,7 @@ public class SmartModelMerger extends ModelMerger {
 
     @Override
     protected void mergeModel_Profiles(Model target, Model source, boolean sourceDominant,
-                                       Map<Object, Object> context) {
+            Map<Object, Object> context) {
         List<Profile> src = source.getProfiles();
         if (!src.isEmpty()) {
             List<Profile> tgt = target.getProfiles();

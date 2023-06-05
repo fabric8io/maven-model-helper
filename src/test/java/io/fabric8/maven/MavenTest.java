@@ -1,5 +1,7 @@
 package io.fabric8.maven;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,11 +14,11 @@ import java.util.Collections;
 import java.util.Properties;
 
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Scm;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.xmlunit.assertj.XmlAssert;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -27,7 +29,7 @@ class MavenTest {
     void should_read_model() {
         Path basePom = Paths.get("pom.xml");
         Model model = Maven.readModel(basePom);
-        assertThat(model).isNotNull();
+        Assertions.assertThat(model).isNotNull();
         assertThat(model.getPomFile().getAbsolutePath()).isEqualTo(basePom.toAbsolutePath().toString());
         assertThat(model.getParent().getGroupId()).isEqualTo("org.jboss");
         assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
@@ -37,7 +39,7 @@ class MavenTest {
     void should_read_model_using_reader() {
         Model model = Maven.readModel(
                 new StringReader("<project><groupId>org.jboss</groupId><artifactId>maven-model-helper</artifactId></project>"));
-        assertThat(model).isNotNull();
+        Assertions.assertThat(model).isNotNull();
         assertThat(model.getGroupId()).isEqualTo("org.jboss");
         assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
     }
@@ -46,7 +48,7 @@ class MavenTest {
     void should_read_model_string() {
         Path basePom = Paths.get("pom.xml");
         Model model = Maven.readModel(basePom.toAbsolutePath().toString());
-        assertThat(model).isNotNull();
+        Assertions.assertThat(model).isNotNull();
         assertThat(model.getPomFile().getAbsolutePath()).isEqualTo(basePom.toAbsolutePath().toString());
         assertThat(model.getParent().getGroupId()).isEqualTo("org.jboss");
         assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
@@ -116,6 +118,33 @@ class MavenTest {
                 .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
                 .valueByXPath("//maven:project/maven:parent/maven:relativePath")
                 .isEqualTo("../../pom.xml");
+    }
+
+    @Test
+    void should_write_scm_tag(@TempDir Path tempDir) throws Exception {
+        Path pomXml = tempDir.resolve("pom.xml");
+        Model newModel = Maven.newModel();
+        Scm scm = new Scm();
+        scm.setUrl("https://github.com/fabric8-launcher/maven-model-helper.git");
+        scm.setDeveloperConnection("scm:git:git@github.com:fabric8-launcher/maven-model-helper.git");
+        scm.setTag("HEAD");
+        newModel.setScm(scm);
+        Maven.writeModel(newModel, pomXml);
+        XmlAssert.assertThat(pomXml)
+                .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
+                .valueByXPath("//maven:project/maven:scm/maven:url")
+                .isEqualTo(scm.getUrl());
+        XmlAssert.assertThat(pomXml)
+                .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
+                .valueByXPath("//maven:project/maven:scm/maven:developerConnection")
+                .isEqualTo(scm.getDeveloperConnection());
+        // HEAD is not written
+        XmlAssert.assertThat(pomXml)
+                .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
+                .valueByXPath("//maven:project/maven:scm/maven:tag")
+                .isEmpty();
+        ;
+
     }
 
 }
