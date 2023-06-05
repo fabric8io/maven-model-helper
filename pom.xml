@@ -12,7 +12,7 @@
     <properties>
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <version.surefire.plugin>3.0.0-M3</version.surefire.plugin>
+        <version.surefire.plugin>3.1.0</version.surefire.plugin>
     </properties>
     <dependencies>
         <dependency>
@@ -71,6 +71,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -91,6 +92,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.1</version>
                 <configuration>
                     <releaseProfiles>gpg-sign,jboss-release,release</releaseProfiles>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
