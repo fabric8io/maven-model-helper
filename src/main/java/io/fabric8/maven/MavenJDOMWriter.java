@@ -1421,8 +1421,8 @@ class MavenJDOMWriter {
     protected void updateExclusion(Exclusion value, String xmlTag, Counter counter, Element element) {
         Element root = element;
         Counter innerCount = new Counter(counter.getDepth() + 1);
-        findAndReplaceSimpleElement(innerCount, root, "artifactId", value.getArtifactId(), null);
         findAndReplaceSimpleElement(innerCount, root, "groupId", value.getGroupId(), null);
+        findAndReplaceSimpleElement(innerCount, root, "artifactId", value.getArtifactId(), null);
     } // -- void updateExclusion(Exclusion, String, Counter, Element)
 
     /**
