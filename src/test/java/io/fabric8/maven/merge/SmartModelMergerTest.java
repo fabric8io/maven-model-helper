@@ -2,8 +2,12 @@ package io.fabric8.maven.merge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
+import io.fabric8.maven.Maven;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Profile;
@@ -88,5 +92,29 @@ class SmartModelMergerTest {
         assertThat(target.getProfiles()).hasSize(1);
         assertThat(target.getProfiles().get(0).getModules()).containsExactly("A", "B", "C", "D", "E", "F");
     }
+
+    @Test
+    void should_keep_target_indent_2() throws URISyntaxException {
+        ModelMerger merger = new SmartModelMerger();
+        final Model source = Maven.readModel(Paths.get(getClass().getResource("indent/source-pom.xml").toURI()));
+        final Path targetFile = Paths.get(getClass().getResource("indent/pom-2.xml").toURI());
+        final Model target = Maven.readModel(targetFile);
+        merger.merge(target, source, false, null);
+        Maven.writeModel(target, targetFile);
+        assertThat(targetFile).hasSameBinaryContentAs(Paths.get(getClass().getResource("indent/result-pom-2.xml").toURI()));
+    }
+
+    @Test
+    void should_keep_target_indent_4() throws URISyntaxException {
+        ModelMerger merger = new SmartModelMerger();
+        final Model source = Maven.readModel(Paths.get(getClass().getResource("indent/source-pom.xml").toURI()));
+        final Path targetFile = Paths.get(getClass().getResource("indent/pom-4.xml").toURI());
+        final Model target = Maven.readModel(targetFile);
+        merger.merge(target, source, true, null);
+        Maven.writeModel(target, targetFile);
+        assertThat(targetFile).hasSameBinaryContentAs(Paths.get(getClass().getResource("indent/result-pom-4.xml").toURI()));
+    }
+
+
 
 }
