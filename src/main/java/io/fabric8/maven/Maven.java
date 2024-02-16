@@ -125,15 +125,39 @@ public final class Maven {
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not read POM file: " + pom, e);
             }
+            String indentation = findIndentation(pom);
             try (OutputStream os = Files.newOutputStream(pom);
                     OutputStreamWriter ow = new OutputStreamWriter(os)) {
                 MavenJDOMWriter writer = new MavenJDOMWriter();
                 Format format = Format.getPrettyFormat();
+                format.setIndent(indentation);
                 format.setLineSeparator(System.lineSeparator());
                 writer.write(model, document, ow, format);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write POM file: " + pom, e);
             }
         }
+    }
+
+    /**
+     * Find the indentation used in the POM file
+     *
+     * @param pom the path to the POM file
+     * @return the indentation used in the POM file
+     */
+    private static String findIndentation(Path pom) {
+        try (BufferedReader br = Files.newBufferedReader(pom)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                int idx = line.indexOf("<");
+                // We don't care about the first line or unindented lines
+                if (idx > 0) {
+                    return line.substring(0, idx);
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not read POM file: " + pom, e);
+        }
+        return "  ";
     }
 }

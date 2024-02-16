@@ -7,12 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-import io.fabric8.maven.Maven;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Profile;
 import org.apache.maven.model.merge.ModelMerger;
 import org.junit.jupiter.api.Test;
+
+import io.fabric8.maven.Maven;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -101,7 +102,7 @@ class SmartModelMergerTest {
         final Model target = Maven.readModel(targetFile);
         merger.merge(target, source, false, null);
         Maven.writeModel(target, targetFile);
-        assertThat(targetFile).hasSameBinaryContentAs(Paths.get(getClass().getResource("indent/result-pom-2.xml").toURI()));
+        assertThat(targetFile).hasSameTextualContentAs(Paths.get(getClass().getResource("indent/result-pom-2.xml").toURI()));
     }
 
     @Test
@@ -112,9 +113,7 @@ class SmartModelMergerTest {
         final Model target = Maven.readModel(targetFile);
         merger.merge(target, source, true, null);
         Maven.writeModel(target, targetFile);
-        assertThat(targetFile).hasSameBinaryContentAs(Paths.get(getClass().getResource("indent/result-pom-4.xml").toURI()));
+        assertThat(targetFile).hasSameTextualContentAs(Paths.get(getClass().getResource("indent/result-pom-4.xml").toURI()));
     }
-
-
 
 }
