@@ -7,7 +7,6 @@
 
 package io.fabric8.maven;
 
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,8 +87,6 @@ class MavenJDOMWriter {
      */
     private String lineSeparator;
 
-    private static final String LS = System.lineSeparator();
-
     // ----------------/
     // - Constructors -/
     // ----------------/
@@ -98,19 +95,6 @@ class MavenJDOMWriter {
         factory = new DefaultJDOMFactory();
         lineSeparator = "\n";
     } // -- org.apache.maven.model.io.jdom.MavenJDOMWriter()
-
-    /**
-     * Method write.
-     *
-     * @param project
-     * @param writer
-     * @param document
-     */
-    public void write(Model project, Document document, String encoding, OutputStreamWriter writer)
-            throws java.io.IOException {
-        Format format = Format.getRawFormat().setEncoding(encoding).setLineSeparator(LS);
-        write(project, document, writer, format);
-    } // -- void write(Model, Document, OutputStreamWriter)
 
     /**
      * Method write.
