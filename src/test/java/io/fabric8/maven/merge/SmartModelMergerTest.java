@@ -63,7 +63,7 @@ class SmartModelMergerTest {
 
         merger.merge(target, source, false, null);
 
-        assertThat(target.getProfiles().contains(profile));
+        assertThat(target.getProfiles()).contains(profile);
     }
 
     @Test
