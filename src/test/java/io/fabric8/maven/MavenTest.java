@@ -16,6 +16,7 @@ import java.util.Properties;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Scm;
+import org.approvaltests.Approvals;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -119,6 +120,47 @@ class MavenTest {
                 .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
                 .valueByXPath("//maven:project/maven:parent/maven:relativePath")
                 .isEqualTo("../../pom.xml");
+    }
+
+    @Test
+    void should_save_full_pom_on_new_file(@TempDir Path tempDir) throws Exception {
+        URL resource = getClass().getResource("full-pom.xml");
+        Path basePom = Paths.get(resource.toURI());
+        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+
+        Path newPom = tempDir.resolve("new-pom.xml");
+        Maven.writeModel(model, newPom);
+
+        Approvals.verify(Files.readString(newPom));
+    }
+
+    @Test
+    void should_save_full_pom_on_updated_full_file(@TempDir Path tempDir) throws Exception {
+        URL resource = getClass().getResource("full-pom.xml");
+        Path basePom = Paths.get(resource.toURI());
+        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+
+        Path updatedPom = tempDir.resolve("updated-full-pom.xml");
+        Files.copy(basePom, updatedPom);
+        Maven.writeModel(model, updatedPom);
+
+        Approvals.verify(Files.readString(updatedPom));
+    }
+
+    @Test
+    void should_save_full_pom_on_updated_minimal_file(@TempDir Path tempDir) throws Exception {
+        URL resource = getClass().getResource("full-pom.xml");
+        Path basePom = Paths.get(resource.toURI());
+        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+
+        Path updatedPom = tempDir.resolve("updated-minimal-pom.xml");
+        Files.writeString(updatedPom, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+                +
+                "         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\" />");
+        Maven.writeModel(model, updatedPom);
+
+        Approvals.verify(Files.readString(updatedPom));
     }
 
     @Test
