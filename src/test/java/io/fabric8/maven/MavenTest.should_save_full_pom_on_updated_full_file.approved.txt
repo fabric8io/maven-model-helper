@@ -107,7 +107,6 @@
     <distributionManagement>
         <repository>
             <releases>
-                <enabled>true</enabled>
                 <updatePolicy>string</updatePolicy>
                 <checksumPolicy>string</checksumPolicy>
             </releases>
@@ -128,7 +127,6 @@
                 <checksumPolicy>string</checksumPolicy>
             </releases>
             <snapshots>
-                <enabled>true</enabled>
                 <updatePolicy>string</updatePolicy>
                 <checksumPolicy>string</checksumPolicy>
             </snapshots>
@@ -553,7 +551,6 @@
             <distributionManagement>
                 <repository>
                     <releases>
-                        <enabled>true</enabled>
                         <updatePolicy>string</updatePolicy>
                         <checksumPolicy>string</checksumPolicy>
                     </releases>
@@ -574,7 +571,6 @@
                         <checksumPolicy>string</checksumPolicy>
                     </releases>
                     <snapshots>
-                        <enabled>true</enabled>
                         <updatePolicy>string</updatePolicy>
                         <checksumPolicy>string</checksumPolicy>
                     </snapshots>

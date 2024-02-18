@@ -1,52 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>jboss-parent</artifactId>
     <groupId>org.jboss</groupId>
+    <artifactId>jboss-parent</artifactId>
     <version>43</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
   <groupId>org.acme</groupId>
   <artifactId>full-pom</artifactId>
+  <version>0.0.1</version>
   <packaging>pom</packaging>
   <name>Full Test POM.xml</name>
-  <version>0.0.1</version>
   <description>Full pom.xml for testing purpose</description>
   <url>https://acme.org/full-pom</url>
-  <prerequisites>
-    <maven>string</maven>
-  </prerequisites>
-  <issueManagement>
-    <system>string</system>
-    <url>string</url>
-  </issueManagement>
-  <ciManagement>
-    <system>string</system>
-    <url>string</url>
-    <notifiers>
-      <notifier>
-        <type>string</type>
-        <sendOnSuccess>false</sendOnSuccess>
-        <address>string</address>
-        <configuration>
-          <token>1324567890</token>
-        </configuration>
-      </notifier>
-    </notifiers>
-  </ciManagement>
   <inceptionYear>2024</inceptionYear>
-  <mailingLists>
-    <mailingList>
+  <organization>
+    <name>ACME</name>
+    <url>https://acme.org</url>
+  </organization>
+  <licenses>
+    <license>
       <name>string</name>
-      <subscribe>string</subscribe>
-      <unsubscribe>string</unsubscribe>
-      <post>string</post>
-      <archive>string</archive>
-      <otherArchives>
-        <otherArchive>string</otherArchive>
-      </otherArchives>
-    </mailingList>
-  </mailingLists>
+      <url>string</url>
+      <distribution>string</distribution>
+      <comments>string</comments>
+    </license>
+  </licenses>
   <developers>
     <developer>
       <id>string</id>
@@ -80,23 +59,167 @@
       </properties>
     </contributor>
   </contributors>
-  <licenses>
-    <license>
+  <mailingLists>
+    <mailingList>
       <name>string</name>
-      <url>string</url>
-      <distribution>string</distribution>
-      <comments>string</comments>
-    </license>
-  </licenses>
+      <subscribe>string</subscribe>
+      <unsubscribe>string</unsubscribe>
+      <post>string</post>
+      <archive>string</archive>
+      <otherArchives>
+        <otherArchive>string</otherArchive>
+      </otherArchives>
+    </mailingList>
+  </mailingLists>
+  <prerequisites>
+    <maven>string</maven>
+  </prerequisites>
+  <modules>
+    <module>string</module>
+  </modules>
   <scm>
     <connection>scm:git:git://github.com/fabric8-launcher/maven-model-helper.git</connection>
     <developerConnection>scm:git:git@github.com:fabric8-launcher/maven-model-helper.git</developerConnection>
     <url>https://github.com/fabric8-launcher/maven-model-helper</url>
   </scm>
-  <organization>
-    <name>ACME</name>
-    <url>https://acme.org</url>
-  </organization>
+  <issueManagement>
+    <system>string</system>
+    <url>string</url>
+  </issueManagement>
+  <ciManagement>
+    <system>string</system>
+    <url>string</url>
+    <notifiers>
+      <notifier>
+        <type>string</type>
+        <sendOnSuccess>false</sendOnSuccess>
+        <address>string</address>
+        <configuration>
+          <token>1324567890</token>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  <distributionManagement>
+    <repository>
+      <releases>
+        <updatePolicy>string</updatePolicy>
+        <checksumPolicy>string</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>string</updatePolicy>
+        <checksumPolicy>string</checksumPolicy>
+      </snapshots>
+      <id>string</id>
+      <name>string</name>
+      <url>string</url>
+      <layout>string</layout>
+    </repository>
+    <snapshotRepository>
+      <releases>
+        <enabled>false</enabled>
+        <updatePolicy>string</updatePolicy>
+        <checksumPolicy>string</checksumPolicy>
+      </releases>
+      <snapshots>
+        <updatePolicy>string</updatePolicy>
+        <checksumPolicy>string</checksumPolicy>
+      </snapshots>
+      <id>string</id>
+      <name>string</name>
+      <url>string</url>
+      <layout>string</layout>
+    </snapshotRepository>
+    <site>
+      <id>string</id>
+      <name>string</name>
+      <url>string</url>
+    </site>
+    <downloadUrl>string</downloadUrl>
+    <relocation>
+      <groupId>string</groupId>
+      <artifactId>string</artifactId>
+      <version>string</version>
+      <message>string</message>
+    </relocation>
+    <status>string</status>
+  </distributionManagement>
+  <properties>
+    <maven.compiler.parameters>true</maven.compiler.parameters>
+    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>string</groupId>
+        <artifactId>string</artifactId>
+        <version>string</version>
+        <type>string</type>
+        <classifier>string</classifier>
+        <scope>string</scope>
+        <systemPath>string</systemPath>
+        <exclusions>
+          <exclusion>
+            <groupId>string</groupId>
+            <artifactId>string</artifactId>
+          </exclusion>
+        </exclusions>
+        <optional>true</optional>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>string</groupId>
+      <artifactId>string</artifactId>
+      <version>string</version>
+      <type>string</type>
+      <classifier>string</classifier>
+      <scope>string</scope>
+      <systemPath>string</systemPath>
+      <exclusions>
+        <exclusion>
+          <groupId>string</groupId>
+          <artifactId>string</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <releases>
+        <updatePolicy>string</updatePolicy>
+        <checksumPolicy>string</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>string</updatePolicy>
+        <checksumPolicy>string</checksumPolicy>
+      </snapshots>
+      <id>string</id>
+      <name>string</name>
+      <url>string</url>
+      <layout>string</layout>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>false</enabled>
+        <updatePolicy>string</updatePolicy>
+        <checksumPolicy>string</checksumPolicy>
+      </releases>
+      <snapshots>
+        <updatePolicy>string</updatePolicy>
+        <checksumPolicy>string</checksumPolicy>
+      </snapshots>
+      <id>string</id>
+      <name>string</name>
+      <url>string</url>
+      <layout>string</layout>
+    </pluginRepository>
+  </pluginRepositories>
   <build>
     <sourceDirectory>string</sourceDirectory>
     <scriptSourceDirectory>string</scriptSourceDirectory>
@@ -239,6 +362,36 @@
       </plugin>
     </plugins>
   </build>
+  <reports>
+    <report>index</report>
+  </reports>
+  <reporting>
+    <excludeDefaults>true</excludeDefaults>
+    <outputDirectory>string</outputDirectory>
+    <plugins>
+      <plugin>
+        <groupId>string</groupId>
+        <artifactId>string</artifactId>
+        <version>string</version>
+        <reportSets>
+          <reportSet>
+            <id>report1</id>
+            <reports>
+              <report>foo</report>
+            </reports>
+            <inherited>false</inherited>
+            <configuration>
+              <foo>bar</foo>
+            </configuration>
+          </reportSet>
+        </reportSets>
+        <inherited>string</inherited>
+        <configuration>
+          <bar>foo</bar>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
   <profiles>
     <profile>
       <id>string</id>
@@ -388,6 +541,92 @@
       <modules>
         <module>string</module>
       </modules>
+      <distributionManagement>
+        <repository>
+          <releases>
+            <updatePolicy>string</updatePolicy>
+            <checksumPolicy>string</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>string</updatePolicy>
+            <checksumPolicy>string</checksumPolicy>
+          </snapshots>
+          <id>string</id>
+          <name>string</name>
+          <url>string</url>
+          <layout>string</layout>
+        </repository>
+        <snapshotRepository>
+          <releases>
+            <enabled>false</enabled>
+            <updatePolicy>string</updatePolicy>
+            <checksumPolicy>string</checksumPolicy>
+          </releases>
+          <snapshots>
+            <updatePolicy>string</updatePolicy>
+            <checksumPolicy>string</checksumPolicy>
+          </snapshots>
+          <id>string</id>
+          <name>string</name>
+          <url>string</url>
+          <layout>string</layout>
+        </snapshotRepository>
+        <site>
+          <id>string</id>
+          <name>string</name>
+          <url>string</url>
+        </site>
+        <downloadUrl>string</downloadUrl>
+        <relocation>
+          <groupId>string</groupId>
+          <artifactId>string</artifactId>
+          <version>string</version>
+          <message>string</message>
+        </relocation>
+        <status>string</status>
+      </distributionManagement>
+      <properties>
+        <prefer.https>true</prefer.https>
+      </properties>
+      <dependencyManagement>
+        <dependencies>
+          <dependency>
+            <groupId>string</groupId>
+            <artifactId>string</artifactId>
+            <version>string</version>
+            <type>string</type>
+            <classifier>string</classifier>
+            <scope>string</scope>
+            <systemPath>string</systemPath>
+            <exclusions>
+              <exclusion>
+                <groupId>string</groupId>
+                <artifactId>string</artifactId>
+              </exclusion>
+            </exclusions>
+            <optional>true</optional>
+          </dependency>
+        </dependencies>
+      </dependencyManagement>
+      <dependencies>
+        <dependency>
+          <groupId>string</groupId>
+          <artifactId>string</artifactId>
+          <version>string</version>
+          <type>string</type>
+          <classifier>string</classifier>
+          <scope>string</scope>
+          <systemPath>string</systemPath>
+          <exclusions>
+            <exclusion>
+              <groupId>string</groupId>
+              <artifactId>string</artifactId>
+            </exclusion>
+          </exclusions>
+          <optional>true</optional>
+        </dependency>
+      </dependencies>
       <repositories>
         <repository>
           <releases>
@@ -422,24 +661,6 @@
           <layout>string</layout>
         </pluginRepository>
       </pluginRepositories>
-      <dependencies>
-        <dependency>
-          <groupId>string</groupId>
-          <artifactId>string</artifactId>
-          <version>string</version>
-          <type>string</type>
-          <classifier>string</classifier>
-          <scope>string</scope>
-          <systemPath>string</systemPath>
-          <exclusions>
-            <exclusion>
-              <groupId>string</groupId>
-              <artifactId>string</artifactId>
-            </exclusion>
-          </exclusions>
-          <optional>true</optional>
-        </dependency>
-      </dependencies>
       <reports>
         <foo>bar</foo>
       </reports>
@@ -450,210 +671,25 @@
             <groupId>string</groupId>
             <artifactId>string</artifactId>
             <version>string</version>
+            <reportSets>
+              <reportSet>
+                <id>string</id>
+                <reports>
+                  <report>string</report>
+                </reports>
+                <inherited>string</inherited>
+                <configuration>
+                  <foo>bar</foo>
+                </configuration>
+              </reportSet>
+            </reportSets>
             <inherited>string</inherited>
             <configuration>
               <foo>bar</foo>
             </configuration>
-            <reportSets>
-              <reportSet>
-                <id>string</id>
-                <configuration>
-                  <foo>bar</foo>
-                </configuration>
-                <inherited>string</inherited>
-                <reports>
-                  <report>string</report>
-                </reports>
-              </reportSet>
-            </reportSets>
           </plugin>
         </plugins>
       </reporting>
-      <dependencyManagement>
-        <dependencies>
-          <dependency>
-            <groupId>string</groupId>
-            <artifactId>string</artifactId>
-            <version>string</version>
-            <type>string</type>
-            <classifier>string</classifier>
-            <scope>string</scope>
-            <systemPath>string</systemPath>
-            <exclusions>
-              <exclusion>
-                <groupId>string</groupId>
-                <artifactId>string</artifactId>
-              </exclusion>
-            </exclusions>
-            <optional>true</optional>
-          </dependency>
-        </dependencies>
-      </dependencyManagement>
-      <distributionManagement>
-        <repository>
-          <id>string</id>
-          <name>string</name>
-          <url>string</url>
-          <layout>string</layout>
-        </repository>
-        <snapshotRepository>
-          <id>string</id>
-          <name>string</name>
-          <url>string</url>
-          <layout>string</layout>
-        </snapshotRepository>
-        <site>
-          <id>string</id>
-          <name>string</name>
-          <url>string</url>
-        </site>
-        <downloadUrl>string</downloadUrl>
-        <relocation>
-          <groupId>string</groupId>
-          <artifactId>string</artifactId>
-          <version>string</version>
-          <message>string</message>
-        </relocation>
-        <status>string</status>
-      </distributionManagement>
-      <properties>
-        <prefer.https>true</prefer.https>
-      </properties>
     </profile>
   </profiles>
-  <modules>
-    <module>string</module>
-  </modules>
-  <repositories>
-    <repository>
-      <releases>
-        <updatePolicy>string</updatePolicy>
-        <checksumPolicy>string</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>string</updatePolicy>
-        <checksumPolicy>string</checksumPolicy>
-      </snapshots>
-      <id>string</id>
-      <name>string</name>
-      <url>string</url>
-      <layout>string</layout>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <releases>
-        <enabled>false</enabled>
-        <updatePolicy>string</updatePolicy>
-        <checksumPolicy>string</checksumPolicy>
-      </releases>
-      <snapshots>
-        <updatePolicy>string</updatePolicy>
-        <checksumPolicy>string</checksumPolicy>
-      </snapshots>
-      <id>string</id>
-      <name>string</name>
-      <url>string</url>
-      <layout>string</layout>
-    </pluginRepository>
-  </pluginRepositories>
-  <dependencies>
-    <dependency>
-      <groupId>string</groupId>
-      <artifactId>string</artifactId>
-      <version>string</version>
-      <type>string</type>
-      <classifier>string</classifier>
-      <scope>string</scope>
-      <systemPath>string</systemPath>
-      <exclusions>
-        <exclusion>
-          <groupId>string</groupId>
-          <artifactId>string</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-  </dependencies>
-  <reports>
-    <report>index</report>
-  </reports>
-  <reporting>
-    <excludeDefaults>true</excludeDefaults>
-    <outputDirectory>string</outputDirectory>
-    <plugins>
-      <plugin>
-        <groupId>string</groupId>
-        <artifactId>string</artifactId>
-        <version>string</version>
-        <inherited>string</inherited>
-        <configuration>
-          <bar>foo</bar>
-        </configuration>
-        <reportSets>
-          <reportSet>
-            <id>report1</id>
-            <configuration>
-              <foo>bar</foo>
-            </configuration>
-            <inherited>false</inherited>
-            <reports>
-              <report>foo</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>string</groupId>
-        <artifactId>string</artifactId>
-        <version>string</version>
-        <type>string</type>
-        <classifier>string</classifier>
-        <scope>string</scope>
-        <systemPath>string</systemPath>
-        <exclusions>
-          <exclusion>
-            <groupId>string</groupId>
-            <artifactId>string</artifactId>
-          </exclusion>
-        </exclusions>
-        <optional>true</optional>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-  <distributionManagement>
-    <repository>
-      <id>string</id>
-      <name>string</name>
-      <url>string</url>
-      <layout>string</layout>
-    </repository>
-    <snapshotRepository>
-      <id>string</id>
-      <name>string</name>
-      <url>string</url>
-      <layout>string</layout>
-    </snapshotRepository>
-    <site>
-      <id>string</id>
-      <name>string</name>
-      <url>string</url>
-    </site>
-    <downloadUrl>string</downloadUrl>
-    <relocation>
-      <groupId>string</groupId>
-      <artifactId>string</artifactId>
-      <version>string</version>
-      <message>string</message>
-    </relocation>
-    <status>string</status>
-  </distributionManagement>
-  <properties>
-    <maven.compiler.parameters>true</maven.compiler.parameters>
-    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-  </properties>
 </project>

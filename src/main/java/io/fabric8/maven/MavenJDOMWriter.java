@@ -1300,6 +1300,8 @@ class MavenJDOMWriter {
         Element root = updateElement(counter, element, xmlTag, shouldExist);
         if (shouldExist) {
             Counter innerCount = new Counter(counter.getDepth() + 1);
+            updateRepositoryPolicy(value.getReleases(), "releases", innerCount, root);
+            updateRepositoryPolicy(value.getSnapshots(), "snapshots", innerCount, root);
             findAndReplaceSimpleElement(innerCount, root, "uniqueVersion",
                     (value.isUniqueVersion()) ? null : String.valueOf(value.isUniqueVersion()), "true");
             findAndReplaceSimpleElement(innerCount, root, "id", value.getId(), null);
@@ -1506,36 +1508,36 @@ class MavenJDOMWriter {
     protected void updateModel(Model value, String xmlTag, Counter counter, Element element) {
         Element root = element;
         Counter innerCount = new Counter(counter.getDepth() + 1);
-        updateParent(value.getParent(), "parent", innerCount, root);
         findAndReplaceSimpleElement(innerCount, root, "modelVersion", value.getModelVersion(), null);
+        updateParent(value.getParent(), "parent", innerCount, root);
         findAndReplaceSimpleElement(innerCount, root, "groupId", value.getGroupId(), null);
         findAndReplaceSimpleElement(innerCount, root, "artifactId", value.getArtifactId(), null);
+        findAndReplaceSimpleElement(innerCount, root, "version", value.getVersion(), null);
         findAndReplaceSimpleElement(innerCount, root, "packaging", value.getPackaging(), "jar");
         findAndReplaceSimpleElement(innerCount, root, "name", value.getName(), null);
-        findAndReplaceSimpleElement(innerCount, root, "version", value.getVersion(), null);
         findAndReplaceSimpleElement(innerCount, root, "description", value.getDescription(), null);
         findAndReplaceSimpleElement(innerCount, root, "url", value.getUrl(), null);
-        updatePrerequisites(value.getPrerequisites(), "prerequisites", innerCount, root);
-        updateIssueManagement(value.getIssueManagement(), "issueManagement", innerCount, root);
-        updateCiManagement(value.getCiManagement(), "ciManagement", innerCount, root);
         findAndReplaceSimpleElement(innerCount, root, "inceptionYear", value.getInceptionYear(), null);
-        iterateMailingList(innerCount, root, value.getMailingLists(), "mailingLists", "mailingList");
+        updateOrganization(value.getOrganization(), "organization", innerCount, root);
+        iterateLicense(innerCount, root, value.getLicenses(), "licenses", "license");
         iterateDeveloper(innerCount, root, value.getDevelopers(), "developers", "developer");
         iterateContributor(innerCount, root, value.getContributors(), "contributors", "contributor");
-        iterateLicense(innerCount, root, value.getLicenses(), "licenses", "license");
-        updateScm(value.getScm(), "scm", innerCount, root);
-        updateOrganization(value.getOrganization(), "organization", innerCount, root);
-        updateBuild(value.getBuild(), "build", innerCount, root);
-        iterateProfile(innerCount, root, value.getProfiles(), "profiles", "profile");
+        iterateMailingList(innerCount, root, value.getMailingLists(), "mailingLists", "mailingList");
+        updatePrerequisites(value.getPrerequisites(), "prerequisites", innerCount, root);
         findAndReplaceSimpleLists(innerCount, root, value.getModules(), "modules", "module");
-        iterateRepository(innerCount, root, value.getRepositories(), "repositories", "repository");
-        iterateRepository(innerCount, root, value.getPluginRepositories(), "pluginRepositories", "pluginRepository");
-        iterateDependency(innerCount, root, value.getDependencies(), "dependencies", "dependency");
-        findAndReplaceXpp3DOM(innerCount, root, "reports", (Xpp3Dom) value.getReports());
-        updateReporting(value.getReporting(), "reporting", innerCount, root);
-        updateDependencyManagement(value.getDependencyManagement(), "dependencyManagement", innerCount, root);
+        updateScm(value.getScm(), "scm", innerCount, root);
+        updateIssueManagement(value.getIssueManagement(), "issueManagement", innerCount, root);
+        updateCiManagement(value.getCiManagement(), "ciManagement", innerCount, root);
         updateDistributionManagement(value.getDistributionManagement(), "distributionManagement", innerCount, root);
         findAndReplaceProperties(innerCount, root, "properties", value.getProperties());
+        updateDependencyManagement(value.getDependencyManagement(), "dependencyManagement", innerCount, root);
+        iterateDependency(innerCount, root, value.getDependencies(), "dependencies", "dependency");
+        iterateRepository(innerCount, root, value.getRepositories(), "repositories", "repository");
+        iterateRepository(innerCount, root, value.getPluginRepositories(), "pluginRepositories", "pluginRepository");
+        updateBuild(value.getBuild(), "build", innerCount, root);
+        findAndReplaceXpp3DOM(innerCount, root, "reports", (Xpp3Dom) value.getReports());
+        updateReporting(value.getReporting(), "reporting", innerCount, root);
+        iterateProfile(innerCount, root, value.getProfiles(), "profiles", "profile");
     } // -- void updateModel(Model, String, Counter, Element)
 
     /**
@@ -1619,8 +1621,8 @@ class MavenJDOMWriter {
         Element root = updateElement(counter, element, xmlTag, shouldExist);
         if (shouldExist) {
             Counter innerCount = new Counter(counter.getDepth() + 1);
-            findAndReplaceSimpleElement(innerCount, root, "artifactId", value.getArtifactId(), null);
             findAndReplaceSimpleElement(innerCount, root, "groupId", value.getGroupId(), null);
+            findAndReplaceSimpleElement(innerCount, root, "artifactId", value.getArtifactId(), null);
             findAndReplaceSimpleElement(innerCount, root, "version", value.getVersion(), null);
             findAndReplaceSimpleElement(innerCount, root, "relativePath", value.getRelativePath(), "../pom.xml");
         }
@@ -1774,14 +1776,14 @@ class MavenJDOMWriter {
         updateActivation(value.getActivation(), "activation", innerCount, root);
         updateBuildBase(value.getBuild(), "build", innerCount, root);
         findAndReplaceSimpleLists(innerCount, root, value.getModules(), "modules", "module");
-        iterateRepository(innerCount, root, value.getRepositories(), "repositories", "repository");
-        iterateRepository(innerCount, root, value.getPluginRepositories(), "pluginRepositories", "pluginRepository");
-        iterateDependency(innerCount, root, value.getDependencies(), "dependencies", "dependency");
-        findAndReplaceXpp3DOM(innerCount, root, "reports", (Xpp3Dom) value.getReports());
-        updateReporting(value.getReporting(), "reporting", innerCount, root);
-        updateDependencyManagement(value.getDependencyManagement(), "dependencyManagement", innerCount, root);
         updateDistributionManagement(value.getDistributionManagement(), "distributionManagement", innerCount, root);
         findAndReplaceProperties(innerCount, root, "properties", value.getProperties());
+        updateDependencyManagement(value.getDependencyManagement(), "dependencyManagement", innerCount, root);
+        iterateDependency(innerCount, root, value.getDependencies(), "dependencies", "dependency");
+        iterateRepository(innerCount, root, value.getRepositories(), "repositories", "repository");
+        iterateRepository(innerCount, root, value.getPluginRepositories(), "pluginRepositories", "pluginRepository");
+        findAndReplaceXpp3DOM(innerCount, root, "reports", (Xpp3Dom) value.getReports());
+        updateReporting(value.getReporting(), "reporting", innerCount, root);
     } // -- void updateProfile(Profile, String, Counter, Element)
 
     /**
@@ -1838,9 +1840,9 @@ class MavenJDOMWriter {
         findAndReplaceSimpleElement(innerCount, root, "groupId", value.getGroupId(), "org.apache.maven.plugins");
         findAndReplaceSimpleElement(innerCount, root, "artifactId", value.getArtifactId(), null);
         findAndReplaceSimpleElement(innerCount, root, "version", value.getVersion(), null);
+        iterateReportSet(innerCount, root, value.getReportSets(), "reportSets", "reportSet");
         findAndReplaceSimpleElement(innerCount, root, "inherited", value.getInherited(), null);
         findAndReplaceXpp3DOM(innerCount, root, "configuration", (Xpp3Dom) value.getConfiguration());
-        iterateReportSet(innerCount, root, value.getReportSets(), "reportSets", "reportSet");
     } // -- void updateReportPlugin(ReportPlugin, String, Counter, Element)
 
     /**
@@ -1855,9 +1857,9 @@ class MavenJDOMWriter {
         Element root = element;
         Counter innerCount = new Counter(counter.getDepth() + 1);
         findAndReplaceSimpleElement(innerCount, root, "id", value.getId(), "default");
-        findAndReplaceXpp3DOM(innerCount, root, "configuration", (Xpp3Dom) value.getConfiguration());
-        findAndReplaceSimpleElement(innerCount, root, "inherited", value.getInherited(), null);
         findAndReplaceSimpleLists(innerCount, root, value.getReports(), "reports", "report");
+        findAndReplaceSimpleElement(innerCount, root, "inherited", value.getInherited(), null);
+        findAndReplaceXpp3DOM(innerCount, root, "configuration", (Xpp3Dom) value.getConfiguration());
     } // -- void updateReportSet(ReportSet, String, Counter, Element)
 
     /**
