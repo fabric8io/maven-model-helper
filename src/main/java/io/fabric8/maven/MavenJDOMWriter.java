@@ -164,15 +164,16 @@ class MavenJDOMWriter {
      * @param name
      * @param parent
      */
-    protected Element findAndReplaceSimpleElement(Counter counter, Element parent, String name, String text,
+    protected void findAndReplaceSimpleElement(Counter counter, Element parent, String name, String text,
             String defaultValue) {
         if ((defaultValue != null) && defaultValue.equals(text)) {
             Element element = parent.getChild(name, parent.getNamespace());
             // if exist and is default value or if doesn't exist.. just keep the
-            // way it is..
-            if (element == null || defaultValue.equals(element.getText())) {
-                return element;
+            // way it is.. otherwise remove it
+            if (element != null && !defaultValue.equals(element.getText())) {
+                parent.removeContent(element);
             }
+            return;
         }
 
         boolean shouldExist = (text != null) && (!text.trim().isEmpty());
@@ -180,7 +181,6 @@ class MavenJDOMWriter {
         if (shouldExist) {
             element.setText(text);
         }
-        return element;
     } // -- Element findAndReplaceSimpleElement(Counter, Element, String,
       // String, String)
 
@@ -1260,7 +1260,7 @@ class MavenJDOMWriter {
         findAndReplaceSimpleElement(innerCount, root, "version", value.getVersion(), null);
         findAndReplaceSimpleElement(innerCount, root, "type", value.getType(), "jar");
         findAndReplaceSimpleElement(innerCount, root, "classifier", value.getClassifier(), null);
-        findAndReplaceSimpleElement(innerCount, root, "scope", value.getScope(), null);
+        findAndReplaceSimpleElement(innerCount, root, "scope", value.getScope(), "compile");
         findAndReplaceSimpleElement(innerCount, root, "systemPath", value.getSystemPath(), null);
         iterateExclusion(innerCount, root, value.getExclusions(), "exclusions", "exclusion");
         findAndReplaceSimpleElement(innerCount, root, "optional",
