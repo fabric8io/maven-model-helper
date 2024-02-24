@@ -49,7 +49,7 @@ class MavenTest {
     @Test
     void should_read_model_string() {
         Path basePom = Paths.get("pom.xml");
-        Model model = Maven.readModel(basePom.toAbsolutePath().toString());
+        Model model = Maven.readModel(basePom);
         Assertions.assertThat(model).isNotNull();
         assertThat(model.getPomFile().getAbsolutePath()).isEqualTo(basePom.toAbsolutePath().toString());
         assertThat(model.getParent().getGroupId()).isEqualTo("org.jboss");
@@ -72,7 +72,7 @@ class MavenTest {
     @Test
     void should_write_model_with_sorted_properties(@TempDir Path tempDir) throws IOException {
         Path basePom = Paths.get("pom.xml");
-        Model model = Maven.readModel(basePom.toAbsolutePath().toString());
+        Model model = Maven.readModel(basePom);
 
         Properties properties = model.getProperties();
         assertThat(properties).isInstanceOf(SortedProperties.class);
@@ -91,7 +91,7 @@ class MavenTest {
     @Test
     void should_write_model_with_sorted_properties_using_reader(@TempDir Path tempDir) throws IOException {
         Path basePom = Paths.get("pom.xml");
-        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+        Model model = Maven.readModel(basePom);
 
         Properties properties = model.getProperties();
         assertThat(properties).isInstanceOf(SortedProperties.class);
@@ -126,7 +126,7 @@ class MavenTest {
     void should_save_full_pom_on_new_file(@TempDir Path tempDir) throws Exception {
         URL resource = getClass().getResource("full-pom.xml");
         Path basePom = Paths.get(resource.toURI());
-        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+        Model model = Maven.readModel(basePom);
 
         Path newPom = tempDir.resolve("new-pom.xml");
         Maven.writeModel(model, newPom);
@@ -138,7 +138,7 @@ class MavenTest {
     void should_save_full_pom_on_updated_full_file(@TempDir Path tempDir) throws Exception {
         URL resource = getClass().getResource("full-pom.xml");
         Path basePom = Paths.get(resource.toURI());
-        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+        Model model = Maven.readModel(basePom);
 
         Path updatedPom = tempDir.resolve("updated-full-pom.xml");
         Files.copy(basePom, updatedPom);
@@ -151,7 +151,7 @@ class MavenTest {
     void should_save_full_pom_on_updated_minimal_file(@TempDir Path tempDir) throws Exception {
         URL resource = getClass().getResource("full-pom.xml");
         Path basePom = Paths.get(resource.toURI());
-        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+        Model model = Maven.readModel(basePom);
 
         Path updatedPom = tempDir.resolve("updated-minimal-pom.xml");
         Files.writeString(updatedPom, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
