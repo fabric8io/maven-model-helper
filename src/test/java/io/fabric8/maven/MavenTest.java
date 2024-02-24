@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Properties;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Scm;
 import org.assertj.core.api.Assertions;
@@ -147,4 +148,26 @@ class MavenTest {
 
     }
 
+    @Test
+    void should_respect_insertion_order(@TempDir Path tempDir) throws Exception {
+        URL resource = getClass().getResource("parent/parent-pom.xml");
+        Path basePom = Paths.get(resource.toURI());
+        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+
+        Path updatedPom = tempDir.resolve("updated-pom.xml");
+        Files.copy(basePom, updatedPom);
+
+        Dependency dependency = model.getDependencies().stream().filter(d -> d.getArtifactId().equals("quarkus-junit5-internal")).findFirst().orElseThrow();
+        dependency.setVersion("1.0.0");
+
+        Maven.writeModel(model, updatedPom);
+
+        assertThat(Files.readString(updatedPom))
+                .contains("<dependency>\n" +
+                        "      <groupId>io.quarkus</groupId>\n" +
+                        "      <artifactId>quarkus-junit5-internal</artifactId>\n" +
+                        "      <version>1.0.0</version>\n" +
+                        "      <scope>test</scope>\n" +
+                        "    </dependency>");
+    }
 }

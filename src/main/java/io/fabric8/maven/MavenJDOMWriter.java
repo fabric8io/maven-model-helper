@@ -262,7 +262,7 @@ class MavenJDOMWriter {
         Iterator it = parent.getContent().iterator();
         Text lastText = null;
         int offset = 0;
-        while (it.hasNext() && (elementCounter <= counter.getCurrentIndex())) {
+        while (it.hasNext() && (elementCounter < counter.getCurrentIndex())) {
             Object next = it.next();
             offset = offset + 1;
             if (next instanceof Element) {
