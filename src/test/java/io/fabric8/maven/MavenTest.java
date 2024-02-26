@@ -152,14 +152,14 @@ class MavenTest {
     void should_respect_insertion_order(@TempDir Path tempDir) throws Exception {
         URL resource = getClass().getResource("parent/parent-pom.xml");
         Path basePom = Paths.get(resource.toURI());
-        Model model = Maven.readModel(new FileReader(basePom.toFile()));
+        Model model = Maven.readModel(basePom);
 
         Path updatedPom = tempDir.resolve("updated-pom.xml");
         Files.copy(basePom, updatedPom);
 
         Dependency dependency = model.getDependencies().stream().filter(d -> d.getArtifactId().equals("quarkus-junit5-internal")).findFirst().orElseThrow();
         dependency.setVersion("1.0.0");
-
+        dependency.setOptional("true");
         Maven.writeModel(model, updatedPom);
 
         assertThat(Files.readString(updatedPom))
@@ -168,6 +168,7 @@ class MavenTest {
                         "      <artifactId>quarkus-junit5-internal</artifactId>\n" +
                         "      <version>1.0.0</version>\n" +
                         "      <scope>test</scope>\n" +
+                        "      <optional>true</optional>\n" +
                         "    </dependency>");
     }
 }

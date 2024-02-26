@@ -80,12 +80,12 @@ class MavenJDOMWriter {
     /**
      * Field factory.
      */
-    private DefaultJDOMFactory factory;
+    private final DefaultJDOMFactory factory;
 
     /**
      * Field lineSeparator.
      */
-    private String lineSeparator;
+    private final String lineSeparator;
 
     // ----------------/
     // - Constructors -/
@@ -175,7 +175,7 @@ class MavenJDOMWriter {
             }
         }
 
-        boolean shouldExist = (text != null) && (text.trim().length() > 0);
+        boolean shouldExist = (text != null) && (!text.trim().isEmpty());
         Element element = updateElement(counter, parent, name, shouldExist);
         if (shouldExist) {
             element.setText(text);
@@ -274,17 +274,13 @@ class MavenJDOMWriter {
                 lastText = (Text) next;
             }
         }
-        if ((lastText != null) && (lastText.getTextTrim().length() == 0)) {
-            lastText = (Text) lastText.clone();
+        if ((lastText != null) && (lastText.getTextTrim().isEmpty())) {
+            lastText = lastText.clone();
         } else {
-            StringBuilder starter = new StringBuilder(lineSeparator);
-            for (int i = 0; i < counter.getDepth(); i++) {
-                starter.append("  ");
-            }
-            lastText = factory.text(starter.toString());
+            lastText = factory.text(lineSeparator + "  ".repeat(Math.max(0, counter.getDepth())));
         }
         if (parent.getContentSize() == 0) {
-            Text finalText = (Text) lastText.clone();
+            Text finalText = lastText.clone();
             finalText.setText(finalText.getText().substring(0, finalText.getText().length() - "  ".length()));
             parent.addContent(contentIndex, finalText);
         }
