@@ -11,7 +11,7 @@ To use this library, add the following dependency to your project:
 <dependency>
   <groupId>io.fabric8</groupId>
   <artifactId>maven-model-helper</artifactId>
-  <version>27</version>
+  <version>28</version>
 </dependency>
 ```
 
