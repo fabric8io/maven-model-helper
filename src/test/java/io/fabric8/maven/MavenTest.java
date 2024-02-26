@@ -3,7 +3,6 @@ package io.fabric8.maven;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
@@ -199,7 +198,8 @@ class MavenTest {
         Path updatedPom = tempDir.resolve("updated-pom.xml");
         Files.copy(basePom, updatedPom);
 
-        Dependency dependency = model.getDependencies().stream().filter(d -> d.getArtifactId().equals("quarkus-junit5-internal")).findFirst().orElseThrow();
+        Dependency dependency = model.getDependencies().stream()
+                .filter(d -> d.getArtifactId().equals("quarkus-junit5-internal")).findFirst().orElseThrow();
         dependency.setVersion("1.0.0");
         dependency.setOptional("true");
         Maven.writeModel(model, updatedPom);
