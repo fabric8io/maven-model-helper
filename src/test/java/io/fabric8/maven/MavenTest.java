@@ -213,4 +213,29 @@ class MavenTest {
                         "      <optional>true</optional>\n" +
                         "    </dependency>");
     }
+
+    @Test
+    void should_write_model_in_dependencies_order(@TempDir Path tempDir) throws Exception {
+        URL resource = getClass().getResource("parent/parent-pom.xml");
+        Path parentPom = Paths.get(resource.toURI());
+        Model model = Maven.readModel(parentPom);
+
+        Dependency dep = new Dependency();
+        dep.setGroupId("org.example");
+        dep.setArtifactId("example");
+        dep.setVersion("1.0");
+        int idx;
+        // Add dependency before the first test scope dependency
+        for (idx = 0; idx < model.getDependencies().size(); idx++) {
+            Dependency d = model.getDependencies().get(idx);
+            if ("test".equals(d.getScope())) {
+                break;
+            }
+        }
+        model.getDependencies().add(idx, dep);
+        Path updatedPom = tempDir.resolve("updated-pom.xml");
+        Files.copy(parentPom, updatedPom);
+        Maven.writeModel(model, updatedPom);
+        Approvals.verify(Files.readString(updatedPom));
+    }
 }
