@@ -3,13 +3,13 @@ package io.fabric8.maven;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Supplier;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -95,7 +95,7 @@ public final class Maven {
     /**
      * Shortcut to writeModel(model,model.getPomFile().toPath());
      *
-     * @param model
+     * @param model the model to write
      */
     public static void writeModel(Model model) {
         writeModel(model, model.getPomFile().toPath());
@@ -104,15 +104,53 @@ public final class Maven {
     /**
      * Write the Model back to the provided {@link Path}
      *
-     * @param model
-     * @param pom
+     * @param model the model to write
+     * @param pom the path to the POM file
      */
     public static void writeModel(Model model, Path pom) {
+        writeModel(model, pom, () -> {
+            try {
+                return Files.newBufferedWriter(pom);
+            } catch (IOException e) {
+                throw new UncheckedIOException("Could not write to Writer", e);
+            }
+        });
+    }
+
+    /**
+     * Shortcut to writeModel(model,model.getPomFile().toPath(),writer);
+     *
+     * @param model the model to write
+     * @param writer the writer to write the model to
+     */
+    public static void writeModel(Model model, Writer writer) {
+        writeModel(model, model.getPomFile().toPath(), () -> writer);
+    }
+
+    /**
+     * Write the Model to the {@link Writer} using the provided {@link Path} as a reference
+     *
+     * @param model the model to write
+     * @param pom the path to the POM file
+     * @param writer the writer to write the model to
+     */
+    public static void writeModel(Model model, Path pom, Writer writer) {
+        writeModel(model, pom, () -> writer);
+    }
+
+    /**
+     * Write the Model to the {@link Writer} using the provided {@link Path} as a reference
+     *
+     * @param model the model to write
+     * @param pom the path to the POM file
+     * @param writerSupplier the writer supplier to write the model to
+     */
+    public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier) {
         if (pom.toFile().length() == 0L) {
             // Initialize an empty XML
-            try (OutputStream os = Files.newOutputStream(pom)) {
-                MavenXpp3Writer writer = new MavenXpp3Writer();
-                writer.write(os, model);
+            try (Writer writer = writerSupplier.get()) {
+                MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
+                mavenXpp3Writer.write(writer, model);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write POM file: " + pom, e);
             }
@@ -126,15 +164,14 @@ public final class Maven {
                 throw new UncheckedIOException("Could not read POM file: " + pom, e);
             }
             String indentation = findIndentation(pom);
-            try (OutputStream os = Files.newOutputStream(pom);
-                    OutputStreamWriter ow = new OutputStreamWriter(os)) {
-                MavenJDOMWriter writer = new MavenJDOMWriter();
+            try (Writer writer = writerSupplier.get()) {
+                MavenJDOMWriter mavenJDOMWriter = new MavenJDOMWriter();
                 Format format = Format.getPrettyFormat();
                 format.setIndent(indentation);
                 format.setLineSeparator(System.lineSeparator());
-                writer.write(model, document, ow, format);
+                mavenJDOMWriter.write(model, document, writer, format);
             } catch (IOException e) {
-                throw new UncheckedIOException("Could not write POM file: " + pom, e);
+                throw new UncheckedIOException("Could not write to Writer", e);
             }
         }
     }
