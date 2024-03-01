@@ -5,12 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.stream.IntStream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -224,18 +226,33 @@ class MavenTest {
         dep.setGroupId("org.example");
         dep.setArtifactId("example");
         dep.setVersion("1.0");
-        int idx;
-        // Add dependency before the first test scope dependency
-        for (idx = 0; idx < model.getDependencies().size(); idx++) {
-            Dependency d = model.getDependencies().get(idx);
-            if ("test".equals(d.getScope())) {
-                break;
-            }
-        }
+        int idx = IntStream.range(0, model.getDependencies().size())
+                .filter(i -> "test".equals(model.getDependencies().get(i).getScope()))
+                .findFirst()
+                .orElse(model.getDependencies().size()); // default to size if no "test" scope is found
         model.getDependencies().add(idx, dep);
         Path updatedPom = tempDir.resolve("updated-pom.xml");
         Files.copy(parentPom, updatedPom);
         Maven.writeModel(model, updatedPom);
         Approvals.verify(Files.readString(updatedPom));
     }
+
+    @Test
+    void should_write_model_to_writer() throws Exception {
+        URL resource = getClass().getResource("parent/parent-pom.xml");
+        Path parentPom = Paths.get(resource.toURI());
+        Model model = Maven.readModel(parentPom);
+
+        Dependency dep = new Dependency();
+        dep.setGroupId("org.example");
+        dep.setArtifactId("example");
+        dep.setVersion("1.0");
+
+        model.getDependencies().add(dep);
+
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw);
+        Approvals.verify(sw.toString());
+    }
+
 }
