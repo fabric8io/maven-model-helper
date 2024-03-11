@@ -124,7 +124,7 @@ public final class Maven {
      * @param writer the writer to write the model to
      */
     public static void writeModel(Model model, Writer writer) {
-        writeModel(model, model.getPomFile().toPath(), () -> writer);
+        writeModel(model, model.getPomFile() != null ? model.getPomFile().toPath() : null, () -> writer);
     }
 
     /**
@@ -146,7 +146,7 @@ public final class Maven {
      * @param writerSupplier the writer supplier to write the model to
      */
     public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier) {
-        if (pom.toFile().length() == 0L) {
+        if (pom == null || pom.toFile().length() == 0L) {
             // Initialize an empty XML
             try (Writer writer = writerSupplier.get()) {
                 MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
