@@ -77,9 +77,9 @@ public final class Maven {
      * @return the maven {@link Model}
      */
     public static Model readModel(Reader rdr) {
-        try {
-            MavenXpp3Reader reader = new MavenXpp3Reader();
-            Model model = reader.read(rdr);
+        try (Reader reader = rdr) {
+            MavenXpp3Reader mavenXpp3Reader = new MavenXpp3Reader();
+            Model model = mavenXpp3Reader.read(reader);
             // https://github.com/fabric8-launcher/maven-model-helper/issues/44
             SortedProperties sortedProps = new SortedProperties();
             sortedProps.putAll(model.getProperties());
