@@ -86,14 +86,20 @@ class MavenJDOMWriter {
      */
     private final String lineSeparator;
 
+    /**
+     * Field indentation
+     */
+    private final String indentation;
+
     // ----------------/
     // - Constructors -/
     // ----------------/
 
-    public MavenJDOMWriter() {
+    public MavenJDOMWriter(String indentation) {
         factory = new DefaultJDOMFactory();
         lineSeparator = "\n";
-    } // -- org.apache.maven.model.io.jdom.MavenJDOMWriter()
+        this.indentation = indentation;
+    }
 
     /**
      * Method write.
@@ -132,14 +138,15 @@ class MavenJDOMWriter {
             while (it.hasNext()) {
                 String key = it.next().toString();
                 if ((element.getChild(key, parent.getNamespace()) == null)) {
-                    // If it is a new entry, append instead of messing with the existing contents
-                    Element newProperty = factory.element(key, parent.getNamespace()).setText((String) props.get(key));
-                    element.addContent(newProperty);
+                    //If it is a new entry, append instead of messing with the existing contents
+                    Element newProperty = factory.element(key, parent.getNamespace()).setText(props.getProperty(key));
+                    // Move pointer to last element
+                    innerCounter.setCurrentIndex(element.getContentSize());
+                    insertAtPreferredLocation(element, newProperty, innerCounter);
                 } else {
-                    findAndReplaceSimpleElement(innerCounter, element, key, (String) props.get(key), null);
+                    findAndReplaceSimpleElement(innerCounter, element, key, props.getProperty(key), null);
                 }
             }
-
             // Remove properties that no longer exist
             var itElem = element.getChildren().iterator();
             while (itElem.hasNext()) {
@@ -187,7 +194,7 @@ class MavenJDOMWriter {
      * @param parent The parent element
      * @param list The list to add
      * @param parentName The name of the parent element
-     * @param childName The name of the child element
+     * @param childName The name of the newProperty element
      */
     protected void findAndReplaceSimpleLists(Counter counter, Element parent, Collection<String> list,
             String parentName, String childName) {
@@ -246,7 +253,7 @@ class MavenJDOMWriter {
      *
      * @param parent The parent element
      * @param counter The counter
-     * @param child The child element
+     * @param child The newProperty element
      */
     protected void insertAtPreferredLocation(Element parent, Element child, Counter counter) {
         int contentIndex = 0;
@@ -256,10 +263,10 @@ class MavenJDOMWriter {
         int offset = 0;
         while (it.hasNext() && (elementCounter < counter.getCurrentIndex())) {
             Object next = it.next();
-            offset = offset + 1;
+            offset++;
             if (next instanceof Element) {
-                elementCounter = elementCounter + 1;
-                contentIndex = contentIndex + offset;
+                elementCounter++;
+                contentIndex += offset;
                 offset = 0;
             }
             if ((next instanceof Text) && it.hasNext()) {
@@ -269,11 +276,11 @@ class MavenJDOMWriter {
         if ((lastText != null) && (lastText.getTextTrim().isEmpty())) {
             lastText = lastText.clone();
         } else {
-            lastText = factory.text(lineSeparator + "  ".repeat(Math.max(0, counter.getDepth())));
+            lastText = factory.text(lineSeparator + indentation.repeat(counter.getDepth()));
         }
         if (parent.getContentSize() == 0) {
             Text finalText = lastText.clone();
-            finalText.setText(finalText.getText().substring(0, finalText.getText().length() - "  ".length()));
+            finalText.setText(finalText.getText().substring(0, finalText.getText().length() - indentation.length()));
             parent.addContent(contentIndex, finalText);
         }
         parent.addContent(contentIndex, child);
@@ -833,7 +840,7 @@ class MavenJDOMWriter {
      * @param parent The parent element
      * @param list The list to iterate
      * @param parentTag The tag of the parent element
-     * @param childTag The tag of the child element
+     * @param childTag The tag of the newProperty element
      */
     protected void iterateRepository(Counter counter, Element parent, Collection<Repository> list,
             String parentTag, String childTag) {
@@ -878,7 +885,7 @@ class MavenJDOMWriter {
      * @param parent The parent element
      * @param list The list to iterate
      * @param parentTag The tag of the parent element
-     * @param childTag The tag of the child element
+     * @param childTag The tag of the newProperty element
      */
     protected void iterateResource(Counter counter, Element parent, Collection<Resource> list,
             String parentTag, String childTag) {
@@ -1886,6 +1893,10 @@ class MavenJDOMWriter {
          */
         public void increaseCount() {
             currentIndex = currentIndex + 1;
+        }
+
+        public void setCurrentIndex(int currentIndex) {
+            this.currentIndex = currentIndex;
         }
     }
 }
