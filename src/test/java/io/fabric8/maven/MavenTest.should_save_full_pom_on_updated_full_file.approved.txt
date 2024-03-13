@@ -98,8 +98,7 @@
                 <address>string</address>
                 <configuration>
                     <!-- comment -->
-                    <token>1324567890</token>
-                    <!-- inline comment -->
+                    <token>1324567890</token> <!-- inline comment -->
                 </configuration>
             </notifier>
         </notifiers>
@@ -333,8 +332,7 @@
                         <inherited>true</inherited>
                         <configuration>
                             <!-- comment -->
-                            <dataFile>target/jacoco/allTest.exec</dataFile>
-                            <!-- inline comment -->
+                            <dataFile>target/jacoco/allTest.exec</dataFile> <!-- inline comment -->
                         </configuration>
                     </execution>
                 </executions>

@@ -85,6 +85,7 @@
                     <configFile>eclipse-format.xml</configFile>
                     <lineEnding>LF</lineEnding>
                     <skip>${format.skip}</skip>
+                    <skipXmlFormatting>true</skipXmlFormatting>
                 </configuration>
             </plugin>
             <plugin>

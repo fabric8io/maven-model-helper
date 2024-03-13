@@ -21,6 +21,7 @@ import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
+import org.jdom2.output.LineSeparator;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -181,10 +182,11 @@ public final class Maven {
             }
             String indentation = findIndentation(pom);
             try (Writer writer = writerSupplier.get()) {
-                MavenJDOMWriter mavenJDOMWriter = new MavenJDOMWriter();
-                Format format = Format.getPrettyFormat();
+                MavenJDOMWriter mavenJDOMWriter = new MavenJDOMWriter(indentation);
+                Format format = Format.getRawFormat();
                 format.setIndent(indentation);
-                format.setLineSeparator(System.lineSeparator());
+                format.setLineSeparator(LineSeparator.UNIX);
+                format.setTextMode(Format.TextMode.PRESERVE);
                 mavenJDOMWriter.write(model, document, writer, format);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write to Writer", e);

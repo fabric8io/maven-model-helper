@@ -271,4 +271,22 @@ class MavenTest {
         Maven.writeModel(model, sw);
         Approvals.verify(sw.toString());
     }
+
+    @Test
+    void should_keep_spaces_and_new_lines() throws Exception {
+        URL resource = getClass().getResource("spaces-pom.xml");
+        Path parentPom = Paths.get(resource.toURI());
+        Model model = Maven.readModel(parentPom);
+
+        Dependency dep = new Dependency();
+        dep.setGroupId("org.example");
+        dep.setArtifactId("example");
+        dep.setVersion("1.0");
+
+        model.getDependencies().add(dep);
+
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw);
+        Approvals.verify(sw.toString());
+    }
 }
