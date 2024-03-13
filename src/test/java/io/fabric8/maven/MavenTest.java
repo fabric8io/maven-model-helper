@@ -1,7 +1,8 @@
 package io.fabric8.maven;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -45,6 +46,22 @@ class MavenTest {
         Assertions.assertThat(model).isNotNull();
         assertThat(model.getGroupId()).isEqualTo("org.jboss");
         assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
+    }
+
+    @Test
+    void should_read_model_using_inputstream() {
+        Model model = Maven.readModel(
+                new ByteArrayInputStream(
+                        "<project><groupId>org.jboss</groupId><artifactId>maven-model-helper</artifactId></project>"
+                                .getBytes()));
+        Assertions.assertThat(model).isNotNull();
+        assertThat(model.getGroupId()).isEqualTo("org.jboss");
+        assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
+    }
+
+    @Test
+    void should_fail_read_model_using_bogus_inputstream() {
+        assertThatRuntimeException().isThrownBy(() -> Maven.readModel(new ByteArrayInputStream("<projectt>".getBytes())));
     }
 
     @Test
@@ -254,5 +271,4 @@ class MavenTest {
         Maven.writeModel(model, sw);
         Approvals.verify(sw.toString());
     }
-
 }

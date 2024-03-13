@@ -14,6 +14,8 @@ import java.util.function.Supplier;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.codehaus.plexus.util.ReaderFactory;
+import org.codehaus.plexus.util.xml.XmlStreamReader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
@@ -89,6 +91,20 @@ public final class Maven {
             throw new UncheckedIOException("Error while reading pom.xml", io);
         } catch (XmlPullParserException e) {
             throw new RuntimeException("Error while parsing pom.xml", e);
+        }
+    }
+
+    /**
+     * Read the {@link InputStream} as a {@link Model}
+     *
+     * @param inputStream an input stream of a pom.xml file
+     * @return the maven {@link Model}
+     */
+    public static Model readModel(InputStream inputStream) {
+        try (XmlStreamReader xmlStreamReader = ReaderFactory.newXmlReader(inputStream)) {
+            return readModel(xmlStreamReader);
+        } catch (IOException io) {
+            throw new UncheckedIOException("Error while reading stream", io);
         }
     }
 
