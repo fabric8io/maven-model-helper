@@ -11,6 +11,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Profile;
 import org.apache.maven.model.merge.ModelMerger;
+import org.approvaltests.Approvals;
 import org.junit.jupiter.api.Test;
 
 import io.fabric8.maven.Maven;
@@ -102,7 +103,7 @@ class SmartModelMergerTest {
         final Model target = Maven.readModel(targetFile);
         merger.merge(target, source, false, null);
         Maven.writeModel(target, targetFile);
-        assertThat(targetFile).hasSameTextualContentAs(Paths.get(getClass().getResource("indent/result-pom-2.xml").toURI()));
+        Approvals.verify(targetFile.toFile());
     }
 
     @Test
@@ -113,7 +114,7 @@ class SmartModelMergerTest {
         final Model target = Maven.readModel(targetFile);
         merger.merge(target, source, true, null);
         Maven.writeModel(target, targetFile);
-        assertThat(targetFile).hasSameTextualContentAs(Paths.get(getClass().getResource("indent/result-pom-4.xml").toURI()));
+        Approvals.verify(targetFile.toFile());
     }
 
 }
