@@ -84,8 +84,7 @@ class MavenTest {
         model.setArtifactId("example");
         model.setVersion("1.0");
         Maven.writeModel(model);
-        assertThat(Files.readAllLines(pom.toPath()).stream().map(String::trim))
-                .contains("<groupId>org.example</groupId>", "<artifactId>example</artifactId>", "<version>1.0</version>");
+        Approvals.verify(pom);
     }
 
     @Test
