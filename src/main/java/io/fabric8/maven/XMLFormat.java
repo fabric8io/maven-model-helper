@@ -22,7 +22,7 @@ import org.jdom2.output.XMLOutputter;
  */
 public class XMLFormat {
 
-    static final XMLFormat DEFAULT = XMLFormat.builder().build();
+    public static final XMLFormat DEFAULT = XMLFormat.builder().build();
 
     private final String indent;
 
@@ -148,8 +148,26 @@ public class XMLFormat {
         TRIM_FULL_WHITE;
     }
 
+    /**
+     * Create a new builder
+     *
+     * @return a new builder
+     */
     public static Builder builder() {
         return new Builder();
+    }
+
+    /**
+     * Create a new builder with the given {@link XMLFormat}
+     *
+     * @param format the format
+     * @return a new builder
+     */
+    public static Builder builder(XMLFormat format) {
+        return new Builder()
+                .indent(format.getIndent())
+                .insertLineBreakBetweenMajorSections(format.isInsertLineBreakBetweenMajorSections())
+                .textMode(format.getTextMode());
     }
 
     public static class Builder {

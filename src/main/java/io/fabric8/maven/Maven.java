@@ -157,7 +157,7 @@ public final class Maven {
     }
 
     public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier) {
-        writeModel(model, pom, writerSupplier, XMLFormat.DEFAULT);
+        writeModel(model, pom, writerSupplier, null);
     }
 
     /**
@@ -171,10 +171,17 @@ public final class Maven {
         if (pom == null || pom.toFile().length() == 0L) {
             // Initialize an empty XML
             try (Writer writer = writerSupplier.get()) {
-                StringWriter sw = new StringWriter();
-                MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
-                mavenXpp3Writer.write(sw, model);
-                format.format(new StringReader(sw.toString()), writer);
+                if (format != null) {
+                    // Format specified, write to a String first
+                    StringWriter sw = new StringWriter();
+                    MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
+                    mavenXpp3Writer.write(sw, model);
+                    format.format(new StringReader(sw.toString()), writer);
+                } else {
+                    // No format specified, keep original behavior
+                    MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
+                    mavenXpp3Writer.write(writer, model);
+                }
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write POM file: " + pom, e);
             }
@@ -190,7 +197,8 @@ public final class Maven {
             String indentation = XMLFormat.findIndentation(pom);
             try (Writer writer = writerSupplier.get()) {
                 MavenJDOMWriter mavenJDOMWriter = new MavenJDOMWriter(indentation);
-                XMLOutputter xmlOutputter = format.createXmlOutputter();
+                XMLOutputter xmlOutputter = format != null ? format.createXmlOutputter()
+                        : XMLFormat.DEFAULT.createXmlOutputter();
                 mavenJDOMWriter.write(model, document, writer, xmlOutputter);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write to Writer", e);
