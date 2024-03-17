@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -169,15 +171,17 @@ public final class Maven {
         if (pom == null || pom.toFile().length() == 0L) {
             // Initialize an empty XML
             try (Writer writer = writerSupplier.get()) {
+                StringWriter sw = new StringWriter();
                 MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
-                mavenXpp3Writer.write(writer, model);
+                mavenXpp3Writer.write(sw, model);
+                format.format(new StringReader(sw.toString()), writer);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write POM file: " + pom, e);
             }
         } else {
             Document document;
-            try (InputStream is = Files.newInputStream(pom)) {
-                document = new SAXBuilder().build(is);
+            try {
+                document = new SAXBuilder().build(pom.toFile());
             } catch (JDOMException e) {
                 throw new RuntimeException("Could not parse POM file: " + pom, e);
             } catch (IOException e) {

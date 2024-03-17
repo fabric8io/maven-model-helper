@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -72,6 +73,19 @@ public class XMLFormat {
         }
     }
 
+    public void format(Reader reader, Writer writer) {
+        Document document;
+        try {
+            document = new SAXBuilder().build(reader);
+            XMLOutputter xmlOutputter = createXmlOutputter();
+            xmlOutputter.output(document, writer);
+        } catch (JDOMException e) {
+            throw new RuntimeException("Could not parse XML", e);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not read XML", e);
+        }
+    }
+
     XMLOutputter createXmlOutputter() {
         XMLOutputter xmlOutputter = new XMLOutputter();
         Format format = Format.getRawFormat();
@@ -105,7 +119,7 @@ public class XMLFormat {
         } catch (IOException e) {
             throw new UncheckedIOException("Could not read POM file: " + pom, e);
         }
-        return "  ";
+        return XMLFormat.DEFAULT.getIndent();
     }
 
     public enum TextMode {
