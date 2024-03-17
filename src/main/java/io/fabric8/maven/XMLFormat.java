@@ -1,13 +1,17 @@
 package io.fabric8.maven;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
+import org.jdom2.output.LineSeparator;
 import org.jdom2.output.XMLOutputter;
 
 /**
@@ -17,13 +21,18 @@ import org.jdom2.output.XMLOutputter;
  */
 public class XMLFormat {
 
+    static final XMLFormat DEFAULT = XMLFormat.builder().build();
+
     private final String indent;
 
     private final boolean insertLineBreakBetweenMajorSections;
 
+    private final TextMode textMode;
+
     private XMLFormat(Builder builder) {
         this.indent = builder.indent;
         this.insertLineBreakBetweenMajorSections = builder.insertLineBreakBetweenMajorSections;
+        this.textMode = builder.textMode;
     }
 
     /**
@@ -40,6 +49,10 @@ public class XMLFormat {
         return insertLineBreakBetweenMajorSections;
     }
 
+    public TextMode getTextMode() {
+        return textMode;
+    }
+
     /**
      * Format the XML from the given reader
      *
@@ -50,21 +63,75 @@ public class XMLFormat {
         Document document;
         try {
             document = new SAXBuilder().build(reader);
-            XMLOutputter xmlOutputter = new XMLOutputter();
-            Format format = Format.getPrettyFormat()
-                    .setIndent(indent);
-            if (insertLineBreakBetweenMajorSections) {
-                // Insert line breaks between major sections
-                xmlOutputter.setXMLOutputProcessor(new LineBreakProcessor());
-            }
-            xmlOutputter.setFormat(format);
+            XMLOutputter xmlOutputter = createXmlOutputter();
             return xmlOutputter.outputString(document);
         } catch (JDOMException e) {
             throw new RuntimeException("Could not parse XML", e);
         } catch (IOException e) {
             throw new UncheckedIOException("Could not read XML", e);
         }
+    }
 
+    XMLOutputter createXmlOutputter() {
+        XMLOutputter xmlOutputter = new XMLOutputter();
+        Format format = Format.getRawFormat();
+        format.setIndent(indent);
+        format.setLineSeparator(LineSeparator.UNIX);
+        format.setTextMode(Format.TextMode.valueOf(textMode.name()));
+        if (insertLineBreakBetweenMajorSections) {
+            // Insert line breaks between major sections
+            xmlOutputter.setXMLOutputProcessor(new LineBreakProcessor());
+        }
+        xmlOutputter.setFormat(format);
+        return xmlOutputter;
+    }
+
+    /**
+     * Find the indentation used in the POM file
+     *
+     * @param pom the path to the POM file
+     * @return the indentation used in the POM file
+     */
+    static String findIndentation(Path pom) {
+        try (BufferedReader br = Files.newBufferedReader(pom)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                int idx = line.indexOf("<");
+                // We don't care about the first line or unindented lines
+                if (idx > 0) {
+                    return line.substring(0, idx);
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not read POM file: " + pom, e);
+        }
+        return "  ";
+    }
+
+    public enum TextMode {
+        /**
+         * Mode for literal text preservation.
+         */
+        PRESERVE,
+
+        /**
+         * Mode for text trimming (left and right trim).
+         */
+        TRIM,
+
+        /**
+         * Mode for text normalization (left and right trim plus internal
+         * whitespace is normalized to a single space.
+         *
+         * @see org.jdom2.Element#getTextNormalize
+         */
+        NORMALIZE,
+
+        /**
+         * Mode for text trimming of content consisting of nothing but
+         * whitespace but otherwise not changing output.
+         */
+        TRIM_FULL_WHITE;
     }
 
     public static Builder builder() {
@@ -75,6 +142,8 @@ public class XMLFormat {
         private String indent = "  ";
 
         private boolean insertLineBreakBetweenMajorSections = false;
+
+        private TextMode textMode = TextMode.PRESERVE;
 
         Builder() {
         }
@@ -90,6 +159,11 @@ public class XMLFormat {
 
         public Builder insertLineBreakBetweenMajorSections(boolean insertLineBreakBetweenMajorSections) {
             this.insertLineBreakBetweenMajorSections = insertLineBreakBetweenMajorSections;
+            return this;
+        }
+
+        public Builder textMode(TextMode textMode) {
+            this.textMode = textMode;
             return this;
         }
 

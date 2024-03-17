@@ -20,8 +20,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.LineSeparator;
+import org.jdom2.output.XMLOutputter;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -155,6 +154,10 @@ public final class Maven {
         writeModel(model, pom, () -> writer);
     }
 
+    public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier) {
+        writeModel(model, pom, writerSupplier, XMLFormat.DEFAULT);
+    }
+
     /**
      * Write the Model to the {@link Writer} using the provided {@link Path} as a reference
      *
@@ -162,7 +165,7 @@ public final class Maven {
      * @param pom the path to the POM file
      * @param writerSupplier the writer supplier to write the model to
      */
-    public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier) {
+    public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier, XMLFormat format) {
         if (pom == null || pom.toFile().length() == 0L) {
             // Initialize an empty XML
             try (Writer writer = writerSupplier.get()) {
@@ -180,39 +183,14 @@ public final class Maven {
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not read POM file: " + pom, e);
             }
-            String indentation = findIndentation(pom);
+            String indentation = XMLFormat.findIndentation(pom);
             try (Writer writer = writerSupplier.get()) {
                 MavenJDOMWriter mavenJDOMWriter = new MavenJDOMWriter(indentation);
-                Format format = Format.getRawFormat();
-                format.setIndent(indentation);
-                format.setLineSeparator(LineSeparator.UNIX);
-                format.setTextMode(Format.TextMode.PRESERVE);
-                mavenJDOMWriter.write(model, document, writer, format);
+                XMLOutputter xmlOutputter = format.createXmlOutputter();
+                mavenJDOMWriter.write(model, document, writer, xmlOutputter);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write to Writer", e);
             }
         }
-    }
-
-    /**
-     * Find the indentation used in the POM file
-     *
-     * @param pom the path to the POM file
-     * @return the indentation used in the POM file
-     */
-    private static String findIndentation(Path pom) {
-        try (BufferedReader br = Files.newBufferedReader(pom)) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                int idx = line.indexOf("<");
-                // We don't care about the first line or unindented lines
-                if (idx > 0) {
-                    return line.substring(0, idx);
-                }
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException("Could not read POM file: " + pom, e);
-        }
-        return "  ";
     }
 }

@@ -64,7 +64,6 @@ import org.jdom2.DefaultJDOMFactory;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Text;
-import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 /**
@@ -109,13 +108,10 @@ class MavenJDOMWriter {
      * @param writer The Writer to write to
      * @param jdomFormat The Format to use for output
      */
-    public void write(Model project, Document document, Writer writer, Format jdomFormat) throws java.io.IOException {
+    public void write(Model project, Document document, Writer writer, XMLOutputter xmlOutputter) throws java.io.IOException {
         updateModel(project, new Counter(0), document.getRootElement());
-
-        XMLOutputter outputter = new XMLOutputter();
-        outputter.setFormat(jdomFormat);
-        outputter.output(document, writer);
-    } // -- void write(Model, Document, Writer, Format)
+        xmlOutputter.output(document, writer);
+    }
 
     // -----------/
     // - Methods -/
