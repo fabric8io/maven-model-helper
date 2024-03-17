@@ -1,6 +1,7 @@
 package io.fabric8.maven;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatRuntimeException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -85,6 +86,29 @@ class MavenTest {
         Maven.writeModel(model);
         assertThat(Files.readAllLines(pom.toPath()).stream().map(String::trim))
                 .contains("<groupId>org.example</groupId>", "<artifactId>example</artifactId>", "<version>1.0</version>");
+    }
+
+    @Test
+    void should_write_model_formatted() {
+        Model model = new Model();
+        model.setGroupId("org.example");
+        model.setArtifactId("example");
+        model.setVersion("1.0");
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw, XMLFormat.builder().indent("    ").build());
+        Approvals.verify(sw.toString());
+    }
+
+    @Test
+    void should_write_existing_model_formatted() throws Exception {
+        Path basePom = Paths.get(getClass().getResource("spaces-pom.xml").toURI());
+        Model model = Maven.readModel(basePom);
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, basePom, () -> sw, XMLFormat.builder()
+                .indent("    ")
+                .insertLineBreakBetweenMajorSections()
+                .build());
+        Approvals.verify(sw.toString());
     }
 
     @Test
@@ -204,8 +228,6 @@ class MavenTest {
                 .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
                 .valueByXPath("//maven:project/maven:scm/maven:tag")
                 .isEmpty();
-        ;
-
     }
 
     @Test

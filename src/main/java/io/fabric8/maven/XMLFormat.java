@@ -22,7 +22,7 @@ import org.jdom2.output.XMLOutputter;
  */
 public class XMLFormat {
 
-    public static final XMLFormat DEFAULT = XMLFormat.builder().build();
+    public static final XMLFormat DEFAULT = XMLFormat.builder().textMode(TextMode.PRESERVE).build();
 
     private final String indent;
 
@@ -175,7 +175,7 @@ public class XMLFormat {
 
         private boolean insertLineBreakBetweenMajorSections = false;
 
-        private TextMode textMode = TextMode.PRESERVE;
+        private TextMode textMode = TextMode.TRIM;
 
         Builder() {
         }

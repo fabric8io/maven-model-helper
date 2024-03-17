@@ -136,6 +136,23 @@ public final class Maven {
     }
 
     /**
+     * Write the Model back to the provided {@link Path} using the specified {@link XMLFormat}
+     *
+     * @param model the model to write
+     * @param pom the path to the POM file
+     * @param format the XML format to use
+     */
+    public static void writeModel(Model model, Path pom, XMLFormat format) {
+        writeModel(model, pom, () -> {
+            try {
+                return Files.newBufferedWriter(pom);
+            } catch (IOException e) {
+                throw new UncheckedIOException("Could not write to Writer", e);
+            }
+        }, format);
+    }
+
+    /**
      * Shortcut to writeModel(model,model.getPomFile().toPath(),writer);
      *
      * @param model the model to write
@@ -143,6 +160,17 @@ public final class Maven {
      */
     public static void writeModel(Model model, Writer writer) {
         writeModel(model, model.getPomFile() != null ? model.getPomFile().toPath() : null, () -> writer);
+    }
+
+    /**
+     * Shortcut to writeModel(model,model.getPomFile().toPath(),writer, format);
+     *
+     * @param model the model to write
+     * @param writer the writer to write the model to
+     * @param format the XML format to use
+     */
+    public static void writeModel(Model model, Writer writer, XMLFormat format) {
+        writeModel(model, model.getPomFile() != null ? model.getPomFile().toPath() : null, () -> writer, format);
     }
 
     /**
@@ -156,6 +184,13 @@ public final class Maven {
         writeModel(model, pom, () -> writer);
     }
 
+    /**
+     * Write the Model to the {@link Writer} using the provided {@link Path} as a reference
+     *
+     * @param model the model to write
+     * @param pom the path to the POM file
+     * @param writerSupplier the writer supplier to write the model to
+     */
     public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier) {
         writeModel(model, pom, writerSupplier, null);
     }
