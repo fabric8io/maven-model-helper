@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>io.quarkiverse.githubapp</groupId>
         <artifactId>quarkus-github-app-parent</artifactId>
@@ -12,7 +11,6 @@
     <artifactId>quarkus-github-app</artifactId>
     <name>Quarkus - GitHub App - Runtime</name>
     <description>Automate GitHub tasks with a GitHub App</description>
-
     <dependencies>
         <dependency>
             <groupId>io.quarkiverse.githubapp</groupId>
@@ -60,7 +58,6 @@
             <artifactId>graal-sdk</artifactId>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

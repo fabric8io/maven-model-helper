@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -20,8 +22,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.LineSeparator;
+import org.jdom2.output.XMLOutputter;
 
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
@@ -135,6 +136,23 @@ public final class Maven {
     }
 
     /**
+     * Write the Model back to the provided {@link Path} using the specified {@link XMLFormat}
+     *
+     * @param model the model to write
+     * @param pom the path to the POM file
+     * @param format the XML format to use
+     */
+    public static void writeModel(Model model, Path pom, XMLFormat format) {
+        writeModel(model, pom, () -> {
+            try {
+                return Files.newBufferedWriter(pom);
+            } catch (IOException e) {
+                throw new UncheckedIOException("Could not write to Writer", e);
+            }
+        }, format);
+    }
+
+    /**
      * Shortcut to writeModel(model,model.getPomFile().toPath(),writer);
      *
      * @param model the model to write
@@ -142,6 +160,17 @@ public final class Maven {
      */
     public static void writeModel(Model model, Writer writer) {
         writeModel(model, model.getPomFile() != null ? model.getPomFile().toPath() : null, () -> writer);
+    }
+
+    /**
+     * Shortcut to writeModel(model,model.getPomFile().toPath(),writer, format);
+     *
+     * @param model the model to write
+     * @param writer the writer to write the model to
+     * @param format the XML format to use
+     */
+    public static void writeModel(Model model, Writer writer, XMLFormat format) {
+        writeModel(model, model.getPomFile() != null ? model.getPomFile().toPath() : null, () -> writer, format);
     }
 
     /**
@@ -163,56 +192,52 @@ public final class Maven {
      * @param writerSupplier the writer supplier to write the model to
      */
     public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier) {
+        writeModel(model, pom, writerSupplier, null);
+    }
+
+    /**
+     * Write the Model to the {@link Writer} using the provided {@link Path} as a reference
+     *
+     * @param model the model to write
+     * @param pom the path to the POM file
+     * @param writerSupplier the writer supplier to write the model to
+     */
+    public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier, XMLFormat format) {
         if (pom == null || pom.toFile().length() == 0L) {
             // Initialize an empty XML
             try (Writer writer = writerSupplier.get()) {
-                MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
-                mavenXpp3Writer.write(writer, model);
+                if (format != null) {
+                    // Format specified, write to a String first
+                    StringWriter sw = new StringWriter();
+                    MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
+                    mavenXpp3Writer.write(sw, model);
+                    format.format(new StringReader(sw.toString()), writer);
+                } else {
+                    // No format specified, keep original behavior
+                    MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
+                    mavenXpp3Writer.write(writer, model);
+                }
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write POM file: " + pom, e);
             }
         } else {
             Document document;
-            try (InputStream is = Files.newInputStream(pom)) {
-                document = new SAXBuilder().build(is);
+            try {
+                document = new SAXBuilder().build(pom.toFile());
             } catch (JDOMException e) {
                 throw new RuntimeException("Could not parse POM file: " + pom, e);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not read POM file: " + pom, e);
             }
-            String indentation = findIndentation(pom);
+            String indentation = XMLFormat.findIndentation(pom);
             try (Writer writer = writerSupplier.get()) {
                 MavenJDOMWriter mavenJDOMWriter = new MavenJDOMWriter(indentation);
-                Format format = Format.getRawFormat();
-                format.setIndent(indentation);
-                format.setLineSeparator(LineSeparator.UNIX);
-                format.setTextMode(Format.TextMode.PRESERVE);
-                mavenJDOMWriter.write(model, document, writer, format);
+                XMLOutputter xmlOutputter = format != null ? format.createXmlOutputter()
+                        : XMLFormat.DEFAULT.createXmlOutputter();
+                mavenJDOMWriter.write(model, document, writer, xmlOutputter);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write to Writer", e);
             }
         }
-    }
-
-    /**
-     * Find the indentation used in the POM file
-     *
-     * @param pom the path to the POM file
-     * @return the indentation used in the POM file
-     */
-    private static String findIndentation(Path pom) {
-        try (BufferedReader br = Files.newBufferedReader(pom)) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                int idx = line.indexOf("<");
-                // We don't care about the first line or unindented lines
-                if (idx > 0) {
-                    return line.substring(0, idx);
-                }
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException("Could not read POM file: " + pom, e);
-        }
-        return "  ";
     }
 }
