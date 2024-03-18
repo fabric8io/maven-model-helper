@@ -21,6 +21,8 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Scm;
 import org.approvaltests.Approvals;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.xmlunit.assertj.XmlAssert;
@@ -28,6 +30,7 @@ import org.xmlunit.assertj.XmlAssert;
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class MavenTest {
 
     @Test
