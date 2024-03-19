@@ -27,7 +27,16 @@ class LineBreakProcessor extends AbstractXMLOutputProcessor {
         buffer = (shouldBreakLine) ? fstack.getLineSeparator() : null;
     }
 
-    private Element findNextSiblingElement(Element element) {
+    @Override
+    protected void textRaw(Writer out, String str) throws IOException {
+        if (buffer != null) {
+            out.write(buffer);
+            buffer = null;
+        }
+        super.textRaw(out, str);
+    }
+
+    private static Element findNextSiblingElement(Element element) {
         Element parent = element.getParentElement();
         if (parent != null) {
             List<Element> children = parent.getChildren();
@@ -37,15 +46,6 @@ class LineBreakProcessor extends AbstractXMLOutputProcessor {
             }
         }
         return null;
-    }
-
-    @Override
-    protected void textRaw(Writer out, String str) throws IOException {
-        if (buffer != null) {
-            out.write(buffer);
-            buffer = null;
-        }
-        super.textRaw(out, str);
     }
 
     private static boolean shouldBreakLine(Element element) {
