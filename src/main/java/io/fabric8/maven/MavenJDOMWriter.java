@@ -1393,6 +1393,8 @@ class MavenJDOMWriter {
      */
     protected void updateModel(Model value, Counter counter, Element root) {
         Counter innerCount = new Counter(counter.getDepth() + 1);
+        findAndReplaceAttribute(root, "child.project.url.inherit.append.path", value.getChildProjectUrlInheritAppendPath(),
+                "true");
         findAndReplaceSimpleElement(innerCount, root, "modelVersion", value.getModelVersion(), null);
         updateParent(value.getParent(), innerCount, root);
         findAndReplaceSimpleElement(innerCount, root, "groupId", value.getGroupId(), null);
@@ -1815,6 +1817,20 @@ class MavenJDOMWriter {
             findAndReplaceSimpleElement(innerCount, root, "developerConnection", value.getDeveloperConnection(), null);
             findAndReplaceSimpleElement(innerCount, root, "tag", value.getTag(), "HEAD");
             findAndReplaceSimpleElement(innerCount, root, "url", value.getUrl(), null);
+            findAndReplaceAttribute(root, "child.scm.connection.inherit.append.path",
+                    value.getChildScmConnectionInheritAppendPath(), "true");
+            findAndReplaceAttribute(root, "child.scm.developerConnection.inherit.append.path",
+                    value.getChildScmUrlInheritAppendPath(), "true");
+            findAndReplaceAttribute(root, "child.scm.url.inherit.append.path",
+                    value.getChildScmDeveloperConnectionInheritAppendPath(), "true");
+        }
+    }
+
+    private void findAndReplaceAttribute(Element root, String name, String value, String defaultValue) {
+        if (value == null || value.equals(defaultValue)) {
+            root.removeAttribute(name);
+        } else {
+            root.setAttribute(name, value);
         }
     }
 

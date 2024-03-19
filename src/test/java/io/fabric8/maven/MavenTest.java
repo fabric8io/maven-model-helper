@@ -313,4 +313,24 @@ class MavenTest {
         Maven.writeModel(model, sw);
         Approvals.verify(sw.toString());
     }
+
+    @Test
+    void should_keep_attributes() throws Exception {
+        Path pom = Paths.get(getClass().getResource("attributes.xml").toURI());
+        Model model = Maven.readModel(pom);
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw);
+        Approvals.verify(sw.toString());
+    }
+
+    @Test
+    void should_write_attributes() throws Exception {
+        Path pom = Paths.get(getClass().getResource("spaces-pom.xml").toURI());
+        Model model = Maven.readModel(pom);
+        model.setChildProjectUrlInheritAppendPath(false);
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw);
+        Approvals.verify(sw.toString());
+    }
+
 }
