@@ -21,8 +21,8 @@ class LineBreakProcessor extends AbstractXMLOutputProcessor {
         List<Element> children = element.getChildren();
         boolean addBreak = (idxElement > -1 && !children.isEmpty());
         if (addBreak) {
-            out.write(fstack.getLineSeparator());
-            out.write(fstack.getLevelIndent());
+            textRaw(out, fstack.getLineSeparator());
+            textRaw(out, fstack.getLevelIndent());
         }
         super.printElement(out, fstack, nstack, element);
     }

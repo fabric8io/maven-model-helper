@@ -19,7 +19,7 @@ class XMLFormatTest {
 
     @Test
     public void should_ident() {
-        XMLFormat xmlFormat = XMLFormat.builder().indent("    ").textMode(XMLFormat.TextMode.TRIM).build();
+        XMLFormat xmlFormat = XMLFormat.builder().indent("    ").build();
         String result = xmlFormat.format(new StringReader("<root><child/></root>"));
         Approvals.verify(result);
     }
@@ -28,7 +28,7 @@ class XMLFormatTest {
     public void should_ident_and_insert_line_break_on_major_sections() {
         InputStream resourceAsStream = getClass().getResourceAsStream("no-spaces-pom.xml");
         assertThat(resourceAsStream).isNotNull();
-        XMLFormat xmlFormat = XMLFormat.builder().indent("    ").textMode(XMLFormat.TextMode.TRIM)
+        XMLFormat xmlFormat = XMLFormat.builder().indent("    ")
                 .insertLineBreakBetweenMajorSections().build();
         String result = xmlFormat.format(new InputStreamReader(resourceAsStream));
         Approvals.verify(result);
