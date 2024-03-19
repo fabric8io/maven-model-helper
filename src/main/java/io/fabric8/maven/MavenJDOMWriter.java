@@ -1846,6 +1846,8 @@ class MavenJDOMWriter {
         Element root = updateElement(counter, element, "site", shouldExist);
         if (shouldExist) {
             Counter innerCount = new Counter(counter.getDepth() + 1);
+            findAndReplaceAttribute(root, "child.site.url.inherit.append.path", value.getChildSiteUrlInheritAppendPath(),
+                    "true");
             findAndReplaceSimpleElement(innerCount, root, "id", value.getId(), null);
             findAndReplaceSimpleElement(innerCount, root, "name", value.getName(), null);
             findAndReplaceSimpleElement(innerCount, root, "url", value.getUrl(), null);
