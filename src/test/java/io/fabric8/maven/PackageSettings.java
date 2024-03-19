@@ -8,6 +8,6 @@ package io.fabric8.maven;
  *      Configuration</a>
  */
 public class PackageSettings {
-    public static String ApprovalBaseDirectory = "../resources";
+    public static String ApprovalBaseDirectory = "../approvals";
 
 }
