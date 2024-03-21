@@ -360,7 +360,16 @@ class MavenTest {
         dep.setArtifactId("spring-boot-dependencies");
         dep.setVersion("${spring-boot.version}");
         dep.setScope("import");
+        dep.setType("pom");
         dependencyManagement.addDependency(dep);
+
+        Dependency dep2 = new Dependency();
+        dep2.setGroupId("org.springframework.boot");
+        dep2.setArtifactId("spring-boot-dependencies");
+        dep2.setVersion("${spring-boot.version}");
+        dep2.setScope("import");
+        dependencyManagement.addDependency(dep2);
+
         StringWriter sw = new StringWriter();
         Maven.writeModel(model, sw);
         Approvals.verify(sw.toString());
