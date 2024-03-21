@@ -354,6 +354,7 @@ class MavenTest {
         Path pom = Paths.get(getClass().getResource("extra-line-pom.xml").toURI());
         Model model = Maven.readModel(pom);
         model.getDependencyManagement().getDependencies().remove(0);
+        model.getDependencies().remove(0);
         StringWriter sw = new StringWriter();
         Maven.writeModel(model, sw);
         Approvals.verify(sw.toString());
