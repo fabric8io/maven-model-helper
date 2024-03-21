@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
 
@@ -219,6 +220,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -316,6 +318,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -355,9 +358,29 @@ class MavenJDOMWriter {
             }
             if (elIt != null) {
                 while (elIt.hasNext()) {
-                    elIt.next();
+                    Element toRemove = elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
+            }
+        }
+    }
+
+    /**
+     * When elements are removed from the JDOM tree, there may be Text nodes (used for indentation) that are left behind.
+     * This method removes these nodes.
+     *
+     * @param content The list of content to remove text nodes from
+     */
+    private void removeExtraIndents(List<Content> content) {
+        // We don't want to remove the first or last text node
+        for (int i = content.size() - 2; i > 0; i--) {
+            Content current = content.get(i);
+            if (current instanceof Text) {
+                content.remove(i);
+            } else {
+                // If the current element is not a text node, we can stop
+                break;
             }
         }
     }
@@ -400,6 +423,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -442,6 +466,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -484,6 +509,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -526,6 +552,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -568,6 +595,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -610,6 +638,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -652,6 +681,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -694,6 +724,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -736,6 +767,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -778,6 +810,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -820,6 +853,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -865,6 +899,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
@@ -910,6 +945,7 @@ class MavenJDOMWriter {
                     elIt.next();
                     elIt.remove();
                 }
+                removeExtraIndents(element.getContent());
             }
         }
     }
