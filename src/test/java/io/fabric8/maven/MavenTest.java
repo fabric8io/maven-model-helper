@@ -17,6 +17,7 @@ import java.util.Properties;
 import java.util.stream.IntStream;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Scm;
 import org.approvaltests.Approvals;
@@ -346,6 +347,22 @@ class MavenTest {
         Model model = Maven.newModel();
         StringWriter sw = new StringWriter();
         Maven.writeModel(model, sw, XMLFormat.builder().lineSeparator(null).build());
+        Approvals.verify(sw.toString());
+    }
+
+    @Test
+    void should_not_add_extra_line_break() throws Exception {
+        Path pom = Paths.get(getClass().getResource("extra-line-pom.xml").toURI());
+        Model model = Maven.readModel(pom);
+        DependencyManagement dependencyManagement = model.getDependencyManagement();
+        Dependency dep = new Dependency();
+        dep.setGroupId("org.springframework.boot");
+        dep.setArtifactId("spring-boot-dependencies");
+        dep.setVersion("${spring-boot.version}");
+        dep.setScope("import");
+        dependencyManagement.addDependency(dep);
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw);
         Approvals.verify(sw.toString());
     }
 
