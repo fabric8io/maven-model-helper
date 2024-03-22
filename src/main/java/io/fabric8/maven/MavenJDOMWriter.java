@@ -266,7 +266,7 @@ class MavenJDOMWriter {
                 lastText = (Text) next;
             }
         }
-        if ((lastText != null) && (lastText.getTextTrim().isEmpty())) {
+        if ((lastText != null) && (!lastText.getTextTrim().isEmpty())) {
             lastText = lastText.clone();
         } else {
             lastText = factory.text(lineSeparator + indentation.repeat(counter.getDepth()));

@@ -362,7 +362,7 @@ class MavenTest {
         Approvals.verify(sw.toString());
     }
 
-    @ValueSource(strings = {"extra-line-pom.xml", "extra-line-pom_alt.xml"})
+    @ValueSource(strings = { "extra-line-pom.xml", "extra-line-pom_alt.xml" })
     @ParameterizedTest
     void should_not_add_extra_line_break_alt(String inputFile) throws Exception {
         Path pom = Paths.get(getClass().getResource(inputFile).toURI());
