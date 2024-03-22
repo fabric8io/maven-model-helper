@@ -1,10 +1,3 @@
-/*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates.
- *
- * Licensed under the Eclipse Public License version 1.0, available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
-
 package io.fabric8.maven;
 
 import java.io.Writer;
@@ -68,6 +61,8 @@ import org.jdom2.output.XMLOutputter;
 
 /**
  * Writes a Maven Model to a JDOM Document
+ *
+ * Based on the implementation in the <a href="https://github.com/apache/maven-archetype/blob/master/archetype-common/src/main/java/org/apache/maven/archetype/common/MavenJDOMWriter.java">Maven Archetype Plugin</a>
  */
 @SuppressWarnings("unused")
 class MavenJDOMWriter {
