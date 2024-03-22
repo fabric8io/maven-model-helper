@@ -30,10 +30,13 @@ public class XMLFormat {
 
     private final TextMode textMode;
 
+    private final String lineSeparator;
+
     private XMLFormat(Builder builder) {
         this.indent = builder.indent;
         this.insertLineBreakBetweenMajorSections = builder.insertLineBreakBetweenMajorSections;
         this.textMode = builder.textMode;
+        this.lineSeparator = builder.lineSeparator;
     }
 
     /**
@@ -90,7 +93,7 @@ public class XMLFormat {
         XMLOutputter xmlOutputter = new XMLOutputter();
         Format format = Format.getRawFormat();
         format.setIndent(indent);
-        format.setLineSeparator(LineSeparator.UNIX);
+        format.setLineSeparator(lineSeparator);
         format.setTextMode(Format.TextMode.valueOf(textMode.name()));
         if (insertLineBreakBetweenMajorSections) {
             // Insert line breaks between major sections
@@ -177,6 +180,8 @@ public class XMLFormat {
 
         private TextMode textMode = TextMode.TRIM;
 
+        private String lineSeparator = LineSeparator.UNIX.value();
+
         Builder() {
         }
 
@@ -196,6 +201,11 @@ public class XMLFormat {
 
         public Builder textMode(TextMode textMode) {
             this.textMode = textMode;
+            return this;
+        }
+
+        public Builder lineSeparator(String lineSeparator) {
+            this.lineSeparator = lineSeparator;
             return this;
         }
 
