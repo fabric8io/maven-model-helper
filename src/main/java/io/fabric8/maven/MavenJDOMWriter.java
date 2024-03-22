@@ -63,7 +63,9 @@ import org.jdom2.output.XMLOutputter;
 /**
  * Writes a Maven Model to a JDOM Document
  *
- * Based on the implementation in the <a href="https://github.com/apache/maven-archetype/blob/master/archetype-common/src/main/java/org/apache/maven/archetype/common/MavenJDOMWriter.java">Maven Archetype Plugin</a>
+ * Based on the implementation in the <a href=
+ * "https://github.com/apache/maven-archetype/blob/master/archetype-common/src/main/java/org/apache/maven/archetype/common/MavenJDOMWriter.java">Maven
+ * Archetype Plugin</a>
  */
 @SuppressWarnings("unused")
 class MavenJDOMWriter {
@@ -252,7 +254,6 @@ class MavenJDOMWriter {
         int contentIndex = 0;
         int elementCounter = 0;
         var it = parent.getContent().iterator();
-        Text lastText = null;
         int offset = 0;
         while (it.hasNext() && (elementCounter < counter.getCurrentIndex())) {
             Object next = it.next();
@@ -262,15 +263,8 @@ class MavenJDOMWriter {
                 contentIndex += offset;
                 offset = 0;
             }
-            if ((next instanceof Text) && it.hasNext()) {
-                lastText = (Text) next;
-            }
         }
-        if ((lastText != null) && (lastText.getTextTrim().isEmpty())) {
-            lastText = lastText.clone();
-        } else {
-            lastText = factory.text(lineSeparator + indentation.repeat(counter.getDepth()));
-        }
+        Text lastText = factory.text(lineSeparator + indentation.repeat(counter.getDepth()));
         if (parent.getContentSize() == 0) {
             Text finalText = lastText.clone();
             finalText.setText(finalText.getText().substring(0, finalText.getText().length() - indentation.length()));
