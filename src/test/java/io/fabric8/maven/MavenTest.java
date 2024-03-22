@@ -333,4 +333,20 @@ class MavenTest {
         Approvals.verify(sw.toString());
     }
 
+    @Test
+    void should_use_line_separator() {
+        Model model = Maven.newModel();
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw, XMLFormat.builder().lineSeparator("\n\n").build());
+        Approvals.verify(sw.toString());
+    }
+
+    @Test
+    void should_support_no_line_separator() {
+        Model model = Maven.newModel();
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw, XMLFormat.builder().lineSeparator(null).build());
+        Approvals.verify(sw.toString());
+    }
+
 }
