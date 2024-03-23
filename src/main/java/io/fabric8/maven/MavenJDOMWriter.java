@@ -170,6 +170,7 @@ class MavenJDOMWriter {
             // way it is.. otherwise remove it
             if (element != null && !defaultValue.equals(element.getText())) {
                 parent.removeContent(element);
+                removeExtraIndents(parent.getContent());
             }
             return;
         }

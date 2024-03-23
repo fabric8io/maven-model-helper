@@ -356,7 +356,12 @@ class MavenTest {
         Path pom = Paths.get(getClass().getResource("extra-line-pom.xml").toURI());
         Model model = Maven.readModel(pom);
         model.getDependencyManagement().getDependencies().remove(0);
-        model.getDependencies().remove(0);
+        Dependency dep = new Dependency();
+        dep.setGroupId("org.springframework.boot");
+        dep.setArtifactId("spring-boot-dependencies");
+        dep.setVersion("${spring-boot.version}");
+        dep.setScope("import");
+        model.getDependencyManagement().addDependency(dep);
         StringWriter sw = new StringWriter();
         Maven.writeModel(model, sw);
         Approvals.verify(sw.toString());
