@@ -25,6 +25,8 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.xmlunit.assertj.XmlAssert;
 
 /**
@@ -349,4 +351,33 @@ class MavenTest {
         Approvals.verify(sw.toString());
     }
 
+    @Test
+    void should_not_add_extra_line_break() throws Exception {
+        Path pom = Paths.get(getClass().getResource("extra-line-pom.xml").toURI());
+        Model model = Maven.readModel(pom);
+        model.getDependencyManagement().getDependencies().remove(0);
+        Dependency dep = new Dependency();
+        dep.setGroupId("org.springframework.boot");
+        dep.setArtifactId("spring-boot-dependencies");
+        dep.setVersion("${spring-boot.version}");
+        dep.setScope("import");
+        model.getDependencyManagement().addDependency(dep);
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw);
+        Approvals.verify(sw.toString());
+    }
+
+    @ValueSource(strings = { "extra-line-pom.xml", "extra-line-pom_alt.xml" })
+    @ParameterizedTest
+    void should_not_add_extra_line_break_alt(String inputFile) throws Exception {
+        Path pom = Paths.get(getClass().getResource(inputFile).toURI());
+        Model model = Maven.readModel(pom);
+        Dependency dependency = new Dependency();
+        dependency.setGroupId("org.springframework.boot");
+        dependency.setArtifactId("spring-boot-starter-parent");
+        model.getDependencies().add(1, dependency);
+        StringWriter sw = new StringWriter();
+        Maven.writeModel(model, sw);
+        Approvals.verify(sw.toString(), Approvals.NAMES.withParameters(inputFile));
+    }
 }
