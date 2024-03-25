@@ -1748,7 +1748,7 @@ final class MavenJDOMWriter {
         /**
          * Field currentIndex.
          */
-        private int currentIndex = 0;
+        private int currentIndex;
 
         /**
          * Field level.
@@ -1778,6 +1778,10 @@ final class MavenJDOMWriter {
             return currentIndex;
         }
 
+        public void setCurrentIndex(int currentIndex) {
+            this.currentIndex = currentIndex;
+        }
+
         /**
          * Method getDepth.
          */
@@ -1789,11 +1793,7 @@ final class MavenJDOMWriter {
          * Method increaseCount.
          */
         public void increaseCount() {
-            currentIndex = currentIndex + 1;
-        }
-
-        public void setCurrentIndex(int currentIndex) {
-            this.currentIndex = currentIndex;
+            currentIndex++;
         }
 
         /**
