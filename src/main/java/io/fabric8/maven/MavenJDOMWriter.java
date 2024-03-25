@@ -158,8 +158,8 @@ final class MavenJDOMWriter {
             String defaultValue) {
         if ((defaultValue != null) && defaultValue.equals(text)) {
             Element element = parent.getChild(name, parent.getNamespace());
-            // if exist and is default value or if doesn't exist.. just keep the
-            // way it is.. otherwise remove it
+            // if exist and is default value or if it doesn't exist, just keep the
+            // way it is. otherwise remove it
             if (element != null && !defaultValue.equals(element.getText())) {
                 parent.removeContent(element);
                 removeExtraIndents(parent.getContent());
