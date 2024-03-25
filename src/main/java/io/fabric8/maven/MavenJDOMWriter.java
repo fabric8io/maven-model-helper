@@ -16,7 +16,6 @@ import org.apache.maven.model.ActivationProperty;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.BuildBase;
 import org.apache.maven.model.CiManagement;
-import org.apache.maven.model.ConfigurationContainer;
 import org.apache.maven.model.Contributor;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
@@ -25,19 +24,14 @@ import org.apache.maven.model.Developer;
 import org.apache.maven.model.DistributionManagement;
 import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Extension;
-import org.apache.maven.model.FileSet;
 import org.apache.maven.model.IssueManagement;
 import org.apache.maven.model.License;
 import org.apache.maven.model.MailingList;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.ModelBase;
 import org.apache.maven.model.Notifier;
 import org.apache.maven.model.Organization;
 import org.apache.maven.model.Parent;
-import org.apache.maven.model.PatternSet;
 import org.apache.maven.model.Plugin;
-import org.apache.maven.model.PluginConfiguration;
-import org.apache.maven.model.PluginContainer;
 import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.PluginManagement;
 import org.apache.maven.model.Prerequisites;
@@ -47,7 +41,6 @@ import org.apache.maven.model.ReportPlugin;
 import org.apache.maven.model.ReportSet;
 import org.apache.maven.model.Reporting;
 import org.apache.maven.model.Repository;
-import org.apache.maven.model.RepositoryBase;
 import org.apache.maven.model.RepositoryPolicy;
 import org.apache.maven.model.Resource;
 import org.apache.maven.model.Scm;
@@ -352,7 +345,7 @@ final class MavenJDOMWriter {
             }
             if (elIt != null) {
                 while (elIt.hasNext()) {
-                    Element toRemove = elIt.next();
+                    elIt.next();
                     elIt.remove();
                 }
                 removeExtraIndents(element.getContent());
@@ -1137,26 +1130,6 @@ final class MavenJDOMWriter {
     }
 
     /**
-     * Method updateConfigurationContainer.
-     *
-     * @param value The ConfigurationContainer to update
-     * @param element The parent element
-     * @param xmlTag The tag of the parent element
-     * @param counter The counter
-     */
-
-    private void updateConfigurationContainer(ConfigurationContainer value, String xmlTag, Counter counter,
-            Element element) {
-        boolean shouldExist = value != null;
-        Element root = updateElement(counter, element, xmlTag, shouldExist);
-        if (shouldExist) {
-            Counter innerCount = counter.newNextDepthLevelCounter();
-            findAndReplaceSimpleElement(innerCount, root, "inherited", value.getInherited(), null);
-            findAndReplaceXpp3DOM(innerCount, root, "configuration", (Xpp3Dom) value.getConfiguration());
-        }
-    }
-
-    /**
      * Method updateContributor.
      *
      * @param value The Contributor to update
@@ -1342,25 +1315,6 @@ final class MavenJDOMWriter {
     }
 
     /**
-     * Method updateFileSet.
-     *
-     * @param value The FileSet to update
-     * @param element The parent element
-     * @param counter The counter
-     * @param xmlTag The tag of the parent element
-     */
-    private void updateFileSet(FileSet value, String xmlTag, Counter counter, Element element) {
-        boolean shouldExist = value != null;
-        Element root = updateElement(counter, element, xmlTag, shouldExist);
-        if (shouldExist) {
-            Counter innerCount = counter.newNextDepthLevelCounter();
-            findAndReplaceSimpleElement(innerCount, root, "directory", value.getDirectory(), null);
-            findAndReplaceSimpleLists(innerCount, root, value.getIncludes(), "includes", "include");
-            findAndReplaceSimpleLists(innerCount, root, value.getExcludes(), "excludes", "exclude");
-        }
-    }
-
-    /**
      * Method updateIssueManagement.
      *
      * @param value The IssueManagement to update
@@ -1453,32 +1407,6 @@ final class MavenJDOMWriter {
     }
 
     /**
-     * Method updateModelBase.
-     *
-     * @param value The ModelBase to update
-     * @param xmlTag The tag of the parent element
-     * @param element The parent element
-     * @param counter The counter
-     */
-    private void updateModelBase(ModelBase value, String xmlTag, Counter counter, Element element) {
-        boolean shouldExist = value != null;
-        Element root = updateElement(counter, element, xmlTag, shouldExist);
-        if (shouldExist) {
-            Counter innerCount = counter.newNextDepthLevelCounter();
-            findAndReplaceSimpleLists(innerCount, root, value.getModules(), "modules", "module");
-            iterateRepository(innerCount, root, value.getRepositories(), "repositories", "repository");
-            iterateRepository(innerCount, root, value.getPluginRepositories(), "pluginRepositories",
-                    "pluginRepository");
-            iterateDependency(innerCount, root, value.getDependencies());
-            findAndReplaceXpp3DOM(innerCount, root, "reports", (Xpp3Dom) value.getReports());
-            updateReporting(value.getReporting(), innerCount, root);
-            updateDependencyManagement(value.getDependencyManagement(), innerCount, root);
-            updateDistributionManagement(value.getDistributionManagement(), innerCount, root);
-            findAndReplaceProperties(innerCount, root, "properties", value.getProperties());
-        }
-    }
-
-    /**
      * Method updateNotifier.
      *
      * @param value The Notifier to update
@@ -1537,24 +1465,6 @@ final class MavenJDOMWriter {
     }
 
     /**
-     * Method updatePatternSet.
-     *
-     * @param value The PatternSet to update
-     * @param xmlTag The tag of the parent element
-     * @param counter The counter
-     * @param element The parent element
-     */
-    private void updatePatternSet(PatternSet value, String xmlTag, Counter counter, Element element) {
-        boolean shouldExist = value != null;
-        Element root = updateElement(counter, element, xmlTag, shouldExist);
-        if (shouldExist) {
-            Counter innerCount = counter.newNextDepthLevelCounter();
-            findAndReplaceSimpleLists(innerCount, root, value.getIncludes(), "includes", "include");
-            findAndReplaceSimpleLists(innerCount, root, value.getExcludes(), "excludes", "exclude");
-        }
-    }
-
-    /**
      * Method updatePlugin.
      *
      * @param value The Plugin to update
@@ -1573,42 +1483,6 @@ final class MavenJDOMWriter {
         findAndReplaceXpp3DOM(innerCount, root, "goals", (Xpp3Dom) value.getGoals());
         findAndReplaceSimpleElement(innerCount, root, "inherited", value.getInherited(), null);
         findAndReplaceXpp3DOM(innerCount, root, "configuration", (Xpp3Dom) value.getConfiguration());
-    }
-
-    /**
-     * Method updatePluginConfiguration.
-     *
-     * @param value The PluginConfiguration to update
-     * @param element The parent element
-     * @param xmlTag The tag of the parent element
-     * @param counter The counter
-     */
-    private void updatePluginConfiguration(PluginConfiguration value, String xmlTag, Counter counter,
-            Element element) {
-        boolean shouldExist = value != null;
-        Element root = updateElement(counter, element, xmlTag, shouldExist);
-        if (shouldExist) {
-            Counter innerCount = counter.newNextDepthLevelCounter();
-            updatePluginManagement(value.getPluginManagement(), innerCount, root);
-            iteratePlugin(innerCount, root, value.getPlugins());
-        }
-    }
-
-    /**
-     * Method updatePluginContainer.
-     *
-     * @param value The PluginContainer to update
-     * @param element The parent element
-     * @param counter The counter
-     * @param xmlTag The tag of the parent element
-     */
-    private void updatePluginContainer(PluginContainer value, String xmlTag, Counter counter, Element element) {
-        boolean shouldExist = value != null;
-        Element root = updateElement(counter, element, xmlTag, shouldExist);
-        if (shouldExist) {
-            Counter innerCount = counter.newNextDepthLevelCounter();
-            iteratePlugin(innerCount, root, value.getPlugins());
-        }
     }
 
     /**
@@ -1767,26 +1641,6 @@ final class MavenJDOMWriter {
         findAndReplaceSimpleElement(innerCount, root, "name", value.getName(), null);
         findAndReplaceSimpleElement(innerCount, root, "url", value.getUrl(), null);
         findAndReplaceSimpleElement(innerCount, root, "layout", value.getLayout(), "default");
-    }
-
-    /**
-     * Method updateRepositoryBase.
-     *
-     * @param value The RepositoryBase to update
-     * @param xmlTag The tag of the parent element
-     * @param element The parent element
-     * @param counter The counter
-     */
-    private void updateRepositoryBase(RepositoryBase value, String xmlTag, Counter counter, Element element) {
-        boolean shouldExist = value != null;
-        Element root = updateElement(counter, element, xmlTag, shouldExist);
-        if (shouldExist) {
-            Counter innerCount = counter.newNextDepthLevelCounter();
-            findAndReplaceSimpleElement(innerCount, root, "id", value.getId(), null);
-            findAndReplaceSimpleElement(innerCount, root, "name", value.getName(), null);
-            findAndReplaceSimpleElement(innerCount, root, "url", value.getUrl(), null);
-            findAndReplaceSimpleElement(innerCount, root, "layout", value.getLayout(), "default");
-        }
     }
 
     /**
