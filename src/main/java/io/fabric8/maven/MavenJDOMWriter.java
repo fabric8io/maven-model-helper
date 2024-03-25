@@ -99,7 +99,7 @@ final class MavenJDOMWriter {
      * @param xmlOutputter The {@link XMLOutputter} to use for output
      */
     public void write(Model project, Document document, Writer writer, XMLOutputter xmlOutputter) throws java.io.IOException {
-        updateModel(project, new Counter(0), document.getRootElement());
+        updateModel(project, Counter.initialCounter(), document.getRootElement());
         xmlOutputter.output(document, writer);
     }
 
@@ -1740,7 +1740,7 @@ final class MavenJDOMWriter {
     /**
      * Class Counter.
      */
-    static final class Counter {
+    private static final class Counter {
         // --------------------------/
         // - Class/Member Variables -/
         // --------------------------/
@@ -1759,8 +1759,12 @@ final class MavenJDOMWriter {
         // - Constructors -/
         // ----------------/
 
-        public Counter(int depthLevel) {
+        private Counter(int depthLevel) {
             level = depthLevel;
+        }
+
+        public static Counter initialCounter() {
+            return new Counter(0);
         }
 
         // -----------/
