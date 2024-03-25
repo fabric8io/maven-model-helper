@@ -103,7 +103,7 @@ final class MavenJDOMWriter {
      * @param project The Model to write
      * @param document The Document to write to
      * @param writer The Writer to write to
-     * @param jdomFormat The Format to use for output
+     * @param xmlOutputter The {@link XMLOutputter} to use for output
      */
     public void write(Model project, Document document, Writer writer, XMLOutputter xmlOutputter) throws java.io.IOException {
         updateModel(project, new Counter(0), document.getRootElement());
