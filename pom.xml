@@ -155,9 +155,9 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:git://github.com/fabric8-launcher/maven-model-helper.git</connection>
-        <developerConnection>scm:git:git@github.com:fabric8-launcher/maven-model-helper.git</developerConnection>
-        <url>http://github.com/fabric8-launcher/maven-model-helper</url>
+        <connection>scm:git:git://github.com/fabric8io/maven-model-helper.git</connection>
+        <developerConnection>scm:git:git@github.com:fabric8io/maven-model-helper.git</developerConnection>
+        <url>http://github.com/fabric8io/maven-model-helper</url>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
