@@ -12,7 +12,7 @@
     <properties>
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <version.formatter.plugin>2.23.0</version.formatter.plugin>
+        <version.formatter.plugin>2.24.0</version.formatter.plugin>
         <version.impsort.plugin>1.9.0</version.impsort.plugin>
         <version.surefire.plugin>3.1.0</version.surefire.plugin>
         <format.skip>false</format.skip>
