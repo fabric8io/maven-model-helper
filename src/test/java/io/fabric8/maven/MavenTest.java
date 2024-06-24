@@ -109,7 +109,7 @@ class MavenTest {
         Model model = Maven.readModel(basePom);
         StringWriter sw = new StringWriter();
         Maven.writeModel(model, basePom, () -> sw, XMLFormat.builder()
-                .indent("    ")
+                .indent("     ")
                 .insertLineBreakBetweenMajorSections()
                 .build());
         Approvals.verify(sw.toString());
