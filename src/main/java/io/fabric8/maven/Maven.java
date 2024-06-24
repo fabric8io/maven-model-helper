@@ -225,7 +225,8 @@ public final class Maven {
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not read POM file: " + pom, e);
             }
-            String indentation = format != null && format.getIndent() != null ? format.getIndent() : XMLFormat.findIndentation(pom);
+            String indentation = (format != null && format.getIndent() != null) ? format.getIndent()
+                    : XMLFormat.findIndentation(pom);
             try (Writer writer = writerSupplier.get()) {
                 MavenJDOMWriter mavenJDOMWriter = new MavenJDOMWriter(indentation);
                 XMLOutputter xmlOutputter = format != null ? format.createXmlOutputter()
