@@ -169,6 +169,23 @@ class MavenTest {
     }
 
     @Test
+    void should_preserve_empty_parent_relative_path(@TempDir Path tempDir) throws Exception {
+        URL resource = getClass().getResource("parent/parent-pom-empty-relative-path.xml");
+        Path parentPom = Paths.get(resource.toURI());
+        Model model = Maven.readModel(parentPom);
+
+        assertThat(model.getParent().getRelativePath()).isNotNull().isEmpty();
+
+        Path newPath = tempDir.resolve("updated-parent-empty-relative-path.xml");
+        Maven.writeModel(model, newPath);
+
+        XmlAssert.assertThat(newPath)
+                .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
+                .valueByXPath("//maven:project/maven:parent/maven:relativePath")
+                .isEqualTo("");
+    }
+
+    @Test
     void should_save_full_pom_on_new_file(@TempDir Path tempDir) throws Exception {
         URL resource = getClass().getResource("full-pom.xml");
         Path basePom = Paths.get(resource.toURI());
