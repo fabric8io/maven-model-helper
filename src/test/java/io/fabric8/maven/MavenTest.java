@@ -37,13 +37,13 @@ import org.xmlunit.assertj.XmlAssert;
 class MavenTest {
 
     @Test
-    void should_read_model() {
-        Path basePom = Paths.get("pom.xml");
+    void should_read_model() throws Exception {
+        Path basePom = Paths.get(getClass().getResource("full-pom.xml").toURI());
         Model model = Maven.readModel(basePom);
         Assertions.assertThat(model).isNotNull();
         assertThat(model.getPomFile().getAbsolutePath()).isEqualTo(basePom.toAbsolutePath().toString());
         assertThat(model.getParent().getGroupId()).isEqualTo("org.jboss");
-        assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
+        assertThat(model.getArtifactId()).isEqualTo("full-pom");
     }
 
     @Test
@@ -69,16 +69,6 @@ class MavenTest {
     @Test
     void should_fail_read_model_using_bogus_inputstream() {
         assertThatRuntimeException().isThrownBy(() -> Maven.readModel(new ByteArrayInputStream("<projectt>".getBytes())));
-    }
-
-    @Test
-    void should_read_model_string() {
-        Path basePom = Paths.get("pom.xml");
-        Model model = Maven.readModel(basePom);
-        Assertions.assertThat(model).isNotNull();
-        assertThat(model.getPomFile().getAbsolutePath()).isEqualTo(basePom.toAbsolutePath().toString());
-        assertThat(model.getParent().getGroupId()).isEqualTo("org.jboss");
-        assertThat(model.getArtifactId()).isEqualTo("maven-model-helper");
     }
 
     @Test

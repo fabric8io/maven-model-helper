@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.jboss</groupId>
-        <artifactId>jboss-parent</artifactId>
-        <version>51</version>
-    </parent>
     <groupId>io.fabric8</groupId>
     <artifactId>maven-model-helper</artifactId>
     <version>39-SNAPSHOT</version>
     <properties>
-        <maven.compiler.parameters>true</maven.compiler.parameters>
-        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <version.formatter.plugin>2.23.0</version.formatter.plugin>
-        <version.impsort.plugin>1.9.0</version.impsort.plugin>
-        <version.surefire.plugin>3.1.0</version.surefire.plugin>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.release>11</maven.compiler.release>
         <format.skip>false</format.skip>
     </properties>
     <dependencies>
@@ -78,9 +71,28 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.15.0</version>
+                <configuration>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+                <configuration>
+                    <trimStackTrace>false</trimStackTrace>
+                    <systemPropertyVariables>
+                        <java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>net.revelc.code.formatter</groupId>
                 <artifactId>formatter-maven-plugin</artifactId>
-                <version>${version.formatter.plugin}</version>
+                <version>2.23.0</version>
                 <configuration>
                     <configFile>eclipse-format.xml</configFile>
                     <lineEnding>LF</lineEnding>
@@ -91,7 +103,7 @@
             <plugin>
                 <groupId>net.revelc.code</groupId>
                 <artifactId>impsort-maven-plugin</artifactId>
-                <version>${version.impsort.plugin}</version>
+                <version>1.9.0</version>
                 <configuration>
                     <groups>java.,javax.,jakarta.,org.,com.</groups>
                     <staticGroups>*</staticGroups>
@@ -102,6 +114,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -134,22 +147,22 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
+                <version>3.3.1</version>
                 <configuration>
-                    <releaseProfiles>gpg-sign,jboss-release,release</releaseProfiles>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.7.0</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.9.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <serverId>ossrh</serverId>
-                    <stagingProgressTimeoutMinutes>60</stagingProgressTimeoutMinutes>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <waitUntil>published</waitUntil>
                 </configuration>
             </plugin>
         </plugins>
@@ -249,6 +262,46 @@
                             </execution>
                         </executions>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.12.0</version>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- This will sign the artifact, the POM, and all attached artifacts -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.8</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                 </plugins>
             </build>
         </profile>
