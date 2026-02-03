@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.jboss</groupId>
@@ -308,9 +307,6 @@
               <optional>true</optional>
             </dependency>
           </dependencies>
-          <goals>
-            <goal>integration-test</goal>
-          </goals>
           <inherited>true</inherited>
           <configuration>
             <source>${java.version}</source>
@@ -356,9 +352,6 @@
             </exclusions>
           </dependency>
         </dependencies>
-        <goals>
-          <goal>check</goal>
-        </goals>
         <inherited>false</inherited>
         <configuration>
           <rules>
@@ -370,9 +363,6 @@
       </plugin>
     </plugins>
   </build>
-  <reports>
-    <report>index</report>
-  </reports>
   <reporting>
     <excludeDefaults>true</excludeDefaults>
     <outputDirectory>string</outputDirectory>
@@ -492,9 +482,6 @@
                   <optional>true</optional>
                 </dependency>
               </dependencies>
-              <goals>
-                <foo>bar</foo>
-              </goals>
               <inherited>string</inherited>
               <configuration>
                 <foo>bar</foo>
@@ -539,9 +526,6 @@
                 <optional>false</optional>
               </dependency>
             </dependencies>
-            <goals>
-              <foo>bar</foo>
-            </goals>
             <inherited>string</inherited>
             <configuration>
               <foo>bar</foo>
@@ -676,9 +660,6 @@
           <layout>string</layout>
         </pluginRepository>
       </pluginRepositories>
-      <reports>
-        <foo>bar</foo>
-      </reports>
       <reporting>
         <excludeDefaults>false</excludeDefaults>
         <outputDirectory>string</outputDirectory>

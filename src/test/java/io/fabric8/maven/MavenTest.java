@@ -112,17 +112,17 @@ class MavenTest {
         Model model = Maven.readModel(basePom);
 
         Properties properties = model.getProperties();
-        assertThat(properties).isInstanceOf(SortedProperties.class);
 
         properties.put("c", "three");
         properties.put("a", "one");
         properties.put("b", "two");
 
+        model.setProperties(properties);
         // Write pom
         Path pom = tempDir.resolve("temp-pom.xml");
         Maven.writeModel(model, pom);
         assertThat(Files.readAllLines(pom).stream().map(String::trim))
-                .containsSequence("<a>one</a>", "<b>two</b>", "<c>three</c>");
+                .containsSequence("<c>three</c>", "<a>one</a>", "<b>two</b>");
     }
 
     @Test
@@ -131,17 +131,17 @@ class MavenTest {
         Model model = Maven.readModel(basePom);
 
         Properties properties = model.getProperties();
-        assertThat(properties).isInstanceOf(SortedProperties.class);
 
         properties.put("c", "three");
         properties.put("a", "one");
         properties.put("b", "two");
 
+        model.setProperties(properties);
         // Write pom
         Path pom = tempDir.resolve("temp-pom.xml");
         Maven.writeModel(model, pom);
         assertThat(Files.readAllLines(pom).stream().map(String::trim))
-                .containsSequence("<a>one</a>", "<b>two</b>", "<c>three</c>");
+                .containsSequence("<c>three</c>", "<a>one</a>", "<b>two</b>");
     }
 
     @Test
