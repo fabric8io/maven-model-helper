@@ -18,6 +18,7 @@ import java.util.stream.IntStream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Parent;
 import org.apache.maven.model.Scm;
 import org.approvaltests.Approvals;
 import org.assertj.core.api.Assertions;
@@ -174,15 +175,33 @@ class MavenTest {
         Path parentPom = Paths.get(resource.toURI());
         Model model = Maven.readModel(parentPom);
 
-        assertThat(model.getParent().getRelativePath()).isNotNull().isEmpty();
+        assertThat(model.getParent().getRelativePath()).isEmpty();
 
         Path newPath = tempDir.resolve("updated-parent-empty-relative-path.xml");
         Maven.writeModel(model, newPath);
 
         XmlAssert.assertThat(newPath)
                 .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
-                .valueByXPath("//maven:project/maven:parent/maven:relativePath")
-                .isEqualTo("");
+                .valueByXPath("count(//maven:project/maven:parent/maven:relativePath)")
+                .isEqualTo(1);
+    }
+
+    @Test
+    void should_not_write_relative_path_if_null(@TempDir Path tempDir) throws Exception {
+        Model model = Maven.newModel();
+        Parent parent = new Parent();
+        parent.setGroupId("org.foo");
+        parent.setArtifactId("bar");
+        parent.setRelativePath(null);
+        model.setParent(parent);
+
+        Path newPath = tempDir.resolve("updated-parent-empty-relative-path.xml");
+        Maven.writeModel(model, newPath);
+
+        XmlAssert.assertThat(newPath)
+                .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
+                .valueByXPath("count(//maven:project/maven:parent/maven:relativePath)")
+                .isEqualTo(0);
     }
 
     @Test
