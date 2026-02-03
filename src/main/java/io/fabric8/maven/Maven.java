@@ -40,7 +40,6 @@ public final class Maven {
     public static Model newModel() {
         Model model = new Model();
         model.setModelVersion("4.0.0");
-        model.setProperties(new SortedProperties());
         return model;
     }
 
@@ -78,12 +77,7 @@ public final class Maven {
     public static Model readModel(Reader rdr) {
         try (Reader reader = rdr) {
             MavenXpp3Reader mavenXpp3Reader = new MavenXpp3Reader();
-            Model model = mavenXpp3Reader.read(reader, false);
-            // https://github.com/fabric8-launcher/maven-model-helper/issues/44
-            SortedProperties sortedProps = new SortedProperties();
-            sortedProps.putAll(model.getProperties());
-            model.setProperties(sortedProps);
-            return model;
+            return mavenXpp3Reader.read(reader, false);
         } catch (IOException io) {
             throw new UncheckedIOException("Error while reading pom.xml", io);
         } catch (XmlPullParserException e) {

@@ -15,8 +15,6 @@ import org.apache.maven.model.ModelBase;
 import org.apache.maven.model.Profile;
 import org.apache.maven.model.merge.ModelMerger;
 
-import io.fabric8.maven.SortedProperties;
-
 /**
  * @author <a href="mailto:ggastald@redhat.com">George Gastaldi</a>
  */
@@ -30,7 +28,7 @@ public class SmartModelMerger extends ModelMerger {
     @Override
     protected void mergeModelBase_Properties(ModelBase target, ModelBase source, boolean sourceDominant,
             Map<Object, Object> context) {
-        Properties merged = new SortedProperties();
+        Properties merged = new Properties();
         if (sourceDominant) {
             merged.putAll(target.getProperties());
             merged.putAll(source.getProperties());
