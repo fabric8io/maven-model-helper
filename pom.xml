@@ -171,7 +171,7 @@
         <connection>scm:git:git://github.com/fabric8io/maven-model-helper.git</connection>
         <developerConnection>scm:git:git@github.com:fabric8io/maven-model-helper.git</developerConnection>
         <url>https://github.com/fabric8io/maven-model-helper</url>
-        <tag>v38</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <snapshotRepository>
