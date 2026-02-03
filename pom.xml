@@ -6,12 +6,26 @@
     <version>39-SNAPSHOT</version>
     <name>Fabric8 Maven Model Helper</name>
     <description>Parse Maven descriptors and write changes to the model preserving the original comments</description>
+    <url>https://github.com/fabric8io/maven-model-helper/</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>11</maven.compiler.release>
         <format.skip>false</format.skip>
     </properties>
+    <developers>
+        <developer>
+            <id>gastaldi</id>
+            <name>George Gastaldi</name>
+        </developer>
+    </developers>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
