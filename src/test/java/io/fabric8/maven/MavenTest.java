@@ -116,7 +116,6 @@ class MavenTest {
         properties.put("a", "one");
         properties.put("b", "two");
 
-        model.setProperties(properties);
         // Write pom
         Path pom = tempDir.resolve("temp-pom.xml");
         Maven.writeModel(model, pom);
@@ -135,7 +134,6 @@ class MavenTest {
         properties.put("a", "one");
         properties.put("b", "two");
 
-        model.setProperties(properties);
         // Write pom
         Path pom = tempDir.resolve("temp-pom.xml");
         Maven.writeModel(model, pom);
