@@ -144,7 +144,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.1</version>
+                <!-- DO NOT UPGRADE SHADE PLUGIN DEPENDENCY until https://issues.apache.org/jira/browse/MSHADE-419 is resolved -->
+                <!-- See also https://github.com/jboss/jboss-parent-pom/issues/210 -->
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -332,7 +334,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>
