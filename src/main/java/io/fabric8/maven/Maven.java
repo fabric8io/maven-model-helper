@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.xml.XmlStreamReader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jdom2.Document;
@@ -99,7 +98,7 @@ public final class Maven {
      * @return the maven {@link Model}
      */
     public static Model readModel(InputStream inputStream) {
-        try (XmlStreamReader xmlStreamReader = ReaderFactory.newXmlReader(inputStream)) {
+        try (XmlStreamReader xmlStreamReader = new XmlStreamReader(inputStream)) {
             return readModel(xmlStreamReader);
         } catch (IOException io) {
             throw new UncheckedIOException("Error while reading stream", io);
