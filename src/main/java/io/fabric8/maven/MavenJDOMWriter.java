@@ -1402,7 +1402,6 @@ final class MavenJDOMWriter {
         iterateRepository(innerCount, root, value.getRepositories(), "repositories", "repository");
         iterateRepository(innerCount, root, value.getPluginRepositories(), "pluginRepositories", "pluginRepository");
         updateBuild(value.getBuild(), innerCount, root);
-        findAndReplaceXpp3DOM(innerCount, root, "reports", (Xpp3Dom) value.getReports());
         updateReporting(value.getReporting(), innerCount, root);
         iterateProfile(innerCount, root, value.getProfiles());
     }
@@ -1481,7 +1480,6 @@ final class MavenJDOMWriter {
                 (!value.isExtensions()) ? null : String.valueOf(value.isExtensions()), "false", false);
         iteratePluginExecution(innerCount, root, value.getExecutions());
         iterateDependency(innerCount, root, value.getDependencies());
-        findAndReplaceXpp3DOM(innerCount, root, "goals", (Xpp3Dom) value.getGoals());
         findAndReplaceSimpleElement(innerCount, root, "inherited", value.getInherited(), null, false);
         findAndReplaceXpp3DOM(innerCount, root, "configuration", (Xpp3Dom) value.getConfiguration());
     }
@@ -1553,7 +1551,6 @@ final class MavenJDOMWriter {
         iterateDependency(innerCount, root, value.getDependencies());
         iterateRepository(innerCount, root, value.getRepositories(), "repositories", "repository");
         iterateRepository(innerCount, root, value.getPluginRepositories(), "pluginRepositories", "pluginRepository");
-        findAndReplaceXpp3DOM(innerCount, root, "reports", (Xpp3Dom) value.getReports());
         updateReporting(value.getReporting(), innerCount, root);
     }
 
