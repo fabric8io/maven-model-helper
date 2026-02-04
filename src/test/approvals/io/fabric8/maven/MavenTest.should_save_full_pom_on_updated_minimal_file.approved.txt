@@ -300,9 +300,6 @@
               <optional>true</optional>
             </dependency>
           </dependencies>
-          <goals>
-            <goal>integration-test</goal>
-          </goals>
           <inherited>true</inherited>
           <configuration>
             <source>${java.version}</source>
@@ -348,9 +345,6 @@
             </exclusions>
           </dependency>
         </dependencies>
-        <goals>
-          <goal>check</goal>
-        </goals>
         <inherited>false</inherited>
         <configuration>
           <rules>
@@ -362,9 +356,6 @@
       </plugin>
     </plugins>
   </build>
-  <reports>
-    <report>index</report>
-  </reports>
   <reporting>
     <excludeDefaults>true</excludeDefaults>
     <outputDirectory>string</outputDirectory>
@@ -483,9 +474,6 @@
                   <optional>true</optional>
                 </dependency>
               </dependencies>
-              <goals>
-                <foo>bar</foo>
-              </goals>
               <inherited>string</inherited>
               <configuration>
                 <foo>bar</foo>
@@ -528,9 +516,6 @@
                 </exclusions>
               </dependency>
             </dependencies>
-            <goals>
-              <foo>bar</foo>
-            </goals>
             <inherited>string</inherited>
             <configuration>
               <foo>bar</foo>
@@ -661,9 +646,6 @@
           <layout>string</layout>
         </pluginRepository>
       </pluginRepositories>
-      <reports>
-        <foo>bar</foo>
-      </reports>
       <reporting>
         <outputDirectory>string</outputDirectory>
         <plugins>
