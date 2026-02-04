@@ -42,7 +42,9 @@ public final class Maven {
      */
     public static Model newModel() {
         org.apache.maven.api.model.Model modelAPI = org.apache.maven.api.model.Model.newBuilder(true)
-                .modelVersion("4.0.0").properties(new TreeMap<>(String.CASE_INSENSITIVE_ORDER)).build();
+                .modelVersion("4.0.0")
+                .properties(new TreeMap<>(String.CASE_INSENSITIVE_ORDER))
+                .build();
         return new Model(modelAPI);
     }
 
@@ -64,7 +66,7 @@ public final class Maven {
     public static Model readModel(Path pom) {
         try (BufferedReader br = Files.newBufferedReader(pom)) {
             Model model = readModel(br);
-            model.setPomFile(pom.toFile());
+            model.setPomPath(pom);
             return model;
         } catch (IOException io) {
             throw new UncheckedIOException("Error while reading pom.xml", io);
@@ -112,7 +114,7 @@ public final class Maven {
      * @param model the model to write
      */
     public static void writeModel(Model model) {
-        writeModel(model, model.getPomFile().toPath());
+        writeModel(model, model.getPomPath());
     }
 
     /**
@@ -155,7 +157,7 @@ public final class Maven {
      * @param writer the writer to write the model to
      */
     public static void writeModel(Model model, Writer writer) {
-        writeModel(model, model.getPomFile() != null ? model.getPomFile().toPath() : null, () -> writer);
+        writeModel(model, model.getPomPath() != null ? model.getPomPath() : null, () -> writer);
     }
 
     /**
@@ -166,7 +168,7 @@ public final class Maven {
      * @param format the XML format to use
      */
     public static void writeModel(Model model, Writer writer, XMLFormat format) {
-        writeModel(model, model.getPomFile() != null ? model.getPomFile().toPath() : null, () -> writer, format);
+        writeModel(model, model.getPomPath() != null ? model.getPomPath() : null, () -> writer, format);
     }
 
     /**
@@ -199,10 +201,12 @@ public final class Maven {
      * @param writerSupplier the writer supplier to write the model to
      */
     public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier, XMLFormat format) {
-        org.apache.maven.api.model.Model modelApi = model.getDelegate();
+        // Reorder properties case insensitively
         Map<String, String> sortedProps = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        sortedProps.putAll(modelApi.getProperties());
-        modelApi = org.apache.maven.api.model.Model.newBuilder(modelApi, true).properties(sortedProps).build();
+        sortedProps.putAll(model.getDelegate().getProperties());
+        var modelApi = org.apache.maven.api.model.Model.newBuilder(model.getDelegate(), true)
+                .properties(sortedProps)
+                .build();
         if (pom == null || pom.toFile().length() == 0L) {
             // Initialize an empty XML
             try (Writer writer = writerSupplier.get()) {

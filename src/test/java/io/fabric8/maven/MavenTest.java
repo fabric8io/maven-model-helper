@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatRuntimeException;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -73,14 +72,14 @@ class MavenTest {
 
     @Test
     void should_write_model(@TempDir Path tempDir) throws IOException {
-        File pom = tempDir.resolve("temp-pom.xml").toFile();
+        Path pom = tempDir.resolve("temp-pom.xml");
         Model model = new Model();
-        model.setPomFile(pom);
+        model.setPomPath(pom);
         model.setGroupId("org.example");
         model.setArtifactId("example");
         model.setVersion("1.0");
         Maven.writeModel(model);
-        Approvals.verify(pom);
+        Approvals.verify(pom.toFile());
     }
 
     @Test
