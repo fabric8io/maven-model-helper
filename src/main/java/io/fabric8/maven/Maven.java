@@ -11,13 +11,16 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.apache.maven.model.v4.MavenStaxReader;
+import org.apache.maven.model.v4.MavenStaxWriter;
 import org.codehaus.plexus.util.xml.XmlStreamReader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -38,9 +41,9 @@ public final class Maven {
      * @return a new {@link Model}
      */
     public static Model newModel() {
-        Model model = new Model();
-        model.setModelVersion("4.0.0");
-        return model;
+        org.apache.maven.api.model.Model modelAPI = org.apache.maven.api.model.Model.newBuilder(true)
+                .modelVersion("4.0.0").properties(new TreeMap<>(String.CASE_INSENSITIVE_ORDER)).build();
+        return new Model(modelAPI);
     }
 
     /**
@@ -76,12 +79,16 @@ public final class Maven {
      */
     public static Model readModel(Reader rdr) {
         try (Reader reader = rdr) {
-            MavenXpp3Reader mavenXpp3Reader = new MavenXpp3Reader();
-            return mavenXpp3Reader.read(reader, false);
+            MavenStaxReader staxReader = new MavenStaxReader();
+            org.apache.maven.api.model.Model modelApi = staxReader.read(reader, false, null);
+            Map<String, String> sortedProps = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            sortedProps.putAll(modelApi.getProperties());
+            modelApi = org.apache.maven.api.model.Model.newBuilder(modelApi).properties(sortedProps).build();
+            return new Model(modelApi);
+        } catch (XMLStreamException e) {
+            throw new RuntimeException("Error while parsing pom.xml", e);
         } catch (IOException io) {
             throw new UncheckedIOException("Error while reading pom.xml", io);
-        } catch (XmlPullParserException e) {
-            throw new RuntimeException("Error while parsing pom.xml", e);
         }
     }
 
@@ -192,20 +199,28 @@ public final class Maven {
      * @param writerSupplier the writer supplier to write the model to
      */
     public static void writeModel(Model model, Path pom, Supplier<Writer> writerSupplier, XMLFormat format) {
+        org.apache.maven.api.model.Model modelApi = model.getDelegate();
+        Map<String, String> sortedProps = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        sortedProps.putAll(modelApi.getProperties());
+        modelApi = org.apache.maven.api.model.Model.newBuilder(modelApi, true).properties(sortedProps).build();
         if (pom == null || pom.toFile().length() == 0L) {
             // Initialize an empty XML
             try (Writer writer = writerSupplier.get()) {
                 if (format != null) {
                     // Format specified, write to a String first
                     StringWriter sw = new StringWriter();
-                    MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
-                    mavenXpp3Writer.write(sw, model);
+                    MavenStaxWriter mavenStaxWriter = new MavenStaxWriter();
+                    mavenStaxWriter.setAddLocationInformation(false);
+                    mavenStaxWriter.write(sw, modelApi);
                     format.format(new StringReader(sw.toString()), writer);
                 } else {
                     // No format specified, keep original behavior
-                    MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
-                    mavenXpp3Writer.write(writer, model);
+                    MavenStaxWriter mavenStaxWriter = new MavenStaxWriter();
+                    mavenStaxWriter.setAddLocationInformation(false);
+                    mavenStaxWriter.write(writer, modelApi);
                 }
+            } catch (XMLStreamException e) {
+                throw new RuntimeException("Error while reading target XML: " + pom, e);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write POM file: " + pom, e);
             }
@@ -224,7 +239,7 @@ public final class Maven {
                 MavenJDOMWriter mavenJDOMWriter = new MavenJDOMWriter(indentation);
                 XMLOutputter xmlOutputter = format != null ? format.createXmlOutputter()
                         : XMLFormat.DEFAULT.createXmlOutputter();
-                mavenJDOMWriter.write(model, document, writer, xmlOutputter);
+                mavenJDOMWriter.write(new Model(modelApi), document, writer, xmlOutputter);
             } catch (IOException e) {
                 throw new UncheckedIOException("Could not write to Writer", e);
             }
