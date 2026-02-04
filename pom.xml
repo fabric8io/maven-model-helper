@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.fabric8</groupId>
     <artifactId>maven-model-helper</artifactId>
-    <version>39</version>
+    <version>40-SNAPSHOT</version>
     <name>Fabric8 Maven Model Helper</name>
     <description>Parse Maven descriptors and write changes to the model preserving the original comments</description>
     <url>https://github.com/fabric8io/maven-model-helper/</url>
@@ -204,7 +204,7 @@
         <connection>scm:git:git://github.com/fabric8io/maven-model-helper.git</connection>
         <developerConnection>scm:git:git@github.com:fabric8io/maven-model-helper.git</developerConnection>
         <url>https://github.com/fabric8io/maven-model-helper</url>
-        <tag>v39</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <snapshotRepository>
