@@ -81,11 +81,7 @@ public final class Maven {
     public static Model readModel(Reader rdr) {
         try (Reader reader = rdr) {
             MavenStaxReader staxReader = new MavenStaxReader();
-            org.apache.maven.api.model.Model modelApi = staxReader.read(reader, false, null);
-            Map<String, String> sortedProps = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-            sortedProps.putAll(modelApi.getProperties());
-            modelApi = org.apache.maven.api.model.Model.newBuilder(modelApi).properties(sortedProps).build();
-            return new Model(modelApi);
+            return new Model(staxReader.read(reader, false, null));
         } catch (XMLStreamException e) {
             throw new RuntimeException("Error while parsing pom.xml", e);
         } catch (IOException io) {
