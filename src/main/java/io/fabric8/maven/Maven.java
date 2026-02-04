@@ -43,7 +43,6 @@ public final class Maven {
     public static Model newModel() {
         org.apache.maven.api.model.Model modelAPI = org.apache.maven.api.model.Model.newBuilder(true)
                 .modelVersion("4.0.0")
-                .properties(new TreeMap<>(String.CASE_INSENSITIVE_ORDER))
                 .build();
         return new Model(modelAPI);
     }
