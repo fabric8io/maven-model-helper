@@ -122,7 +122,7 @@ class MavenTest {
         Path pom = tempDir.resolve("temp-pom.xml");
         Maven.writeModel(model, pom);
         assertThat(Files.readAllLines(pom).stream().map(String::trim))
-                .containsSequence("<c>three</c>", "<a>one</a>", "<b>two</b>");
+                .containsSequence("<a>one</a>", "<b>two</b>", "<c>three</c>");
     }
 
     @Test
@@ -141,7 +141,7 @@ class MavenTest {
         Path pom = tempDir.resolve("temp-pom.xml");
         Maven.writeModel(model, pom);
         assertThat(Files.readAllLines(pom).stream().map(String::trim))
-                .containsSequence("<c>three</c>", "<a>one</a>", "<b>two</b>");
+                .containsSequence("<a>one</a>", "<b>two</b>", "<c>three</c>");
     }
 
     @Test
