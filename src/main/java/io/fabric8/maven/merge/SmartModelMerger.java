@@ -28,6 +28,17 @@ public class SmartModelMerger extends ModelMerger {
     }
 
     @Override
+    protected void mergeModel_Packaging(Model target, Model source, boolean sourceDominant, Map<Object, Object> context) {
+        // Only set the packaging if it is set in the source and either the source is dominant or the target doesn't have it set
+        if (source.getLocation("packaging") != null) {
+            if (sourceDominant || target.getLocation("packaging") == null) {
+                target.setPackaging(source.getPackaging());
+                target.setLocation("packaging", source.getLocation("packaging"));
+            }
+        }
+    }
+
+    @Override
     protected void mergeModelBase_Properties(ModelBase target, ModelBase source, boolean sourceDominant,
             Map<Object, Object> context) {
         Properties merged = new SortedProperties();
