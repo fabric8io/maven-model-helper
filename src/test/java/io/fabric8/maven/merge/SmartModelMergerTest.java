@@ -2,6 +2,8 @@ package io.fabric8.maven.merge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -117,4 +119,30 @@ class SmartModelMergerTest {
         Approvals.verify(targetFile.toFile());
     }
 
+    @Test
+    void should_preserve_packaging() {
+        String basePom = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<project>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>org.acme</groupId>\n" +
+                "    <artifactId>my-app</artifactId>\n" +
+                "    <version>1.0.0-SNAPSHOT</version>\n" +
+                "    <packaging>quarkus</packaging>\n" +
+                "</project>\n";
+
+        String extensionPom = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<project>\n" +
+                "    <properties>\n" +
+                "        <property-from-extension>value</property-from-extension>\n" +
+                "    </properties>\n" +
+                "</project>\n";
+
+        ModelMerger merger = new SmartModelMerger();
+        final Model source = Maven.readModel(new StringReader(basePom));
+        final Model target = Maven.readModel(new StringReader(extensionPom));
+        merger.merge(target, source, true, null);
+        StringWriter writer = new StringWriter();
+        Maven.writeModel(target, writer);
+        Approvals.verify(writer.toString());
+    }
 }
