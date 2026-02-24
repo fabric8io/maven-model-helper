@@ -145,4 +145,60 @@ class SmartModelMergerTest {
         Maven.writeModel(target, writer);
         Approvals.verify(writer.toString());
     }
+
+    @Test
+    void should_preserve_packaging_in_target() {
+        String basePom = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<project>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>org.acme</groupId>\n" +
+                "    <artifactId>my-app</artifactId>\n" +
+                "    <version>1.0.0-SNAPSHOT</version>\n" +
+                "    <packaging>quarkus</packaging>\n" +
+                "</project>\n";
+
+        String extensionPom = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<project>\n" +
+                "    <properties>\n" +
+                "        <property-from-extension>value</property-from-extension>\n" +
+                "    </properties>\n" +
+                "</project>\n";
+
+        ModelMerger merger = new SmartModelMerger();
+        final Model source = Maven.readModel(new StringReader(extensionPom));
+        final Model target = Maven.readModel(new StringReader(basePom));
+        merger.merge(target, source, true, null);
+        StringWriter writer = new StringWriter();
+        Maven.writeModel(target, writer);
+        Approvals.verify(writer.toString());
+    }
+
+    @Test
+    void should_preserve_packaging_in_target_if_explicitly_set() {
+        String basePom = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<project>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>org.acme</groupId>\n" +
+                "    <artifactId>my-app</artifactId>\n" +
+                "    <version>1.0.0-SNAPSHOT</version>\n" +
+                "    <packaging>quarkus</packaging>\n" +
+                "</project>\n";
+
+        String extensionPom = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<project>\n" +
+                "    <packaging>jar</packaging>\n" +
+                "    <properties>\n" +
+                "        <property-from-extension>value</property-from-extension>\n" +
+                "    </properties>\n" +
+                "</project>\n";
+
+        ModelMerger merger = new SmartModelMerger();
+        final Model source = Maven.readModel(new StringReader(extensionPom));
+        final Model target = Maven.readModel(new StringReader(basePom));
+        merger.merge(target, source, true, null);
+        StringWriter writer = new StringWriter();
+        Maven.writeModel(target, writer);
+        Approvals.verify(writer.toString());
+    }
+
 }

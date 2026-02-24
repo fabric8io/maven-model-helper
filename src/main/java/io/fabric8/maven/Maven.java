@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.util.function.Supplier;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.model.io.xpp3.MavenXpp3ReaderEx;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.XmlStreamReader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -77,8 +77,8 @@ public final class Maven {
      */
     public static Model readModel(Reader rdr) {
         try (Reader reader = rdr) {
-            MavenXpp3Reader mavenXpp3Reader = new MavenXpp3Reader();
-            Model model = mavenXpp3Reader.read(reader);
+            MavenXpp3ReaderEx mavenXpp3Reader = new MavenXpp3ReaderEx();
+            Model model = mavenXpp3Reader.read(reader, true, null);
             // https://github.com/fabric8-launcher/maven-model-helper/issues/44
             SortedProperties sortedProps = new SortedProperties();
             sortedProps.putAll(model.getProperties());
