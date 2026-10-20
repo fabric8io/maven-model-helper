@@ -22,6 +22,7 @@ import org.apache.maven.model.Parent;
 import org.apache.maven.model.Scm;
 import org.approvaltests.Approvals;
 import org.assertj.core.api.Assertions;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -142,6 +143,26 @@ class MavenTest {
         Maven.writeModel(model, pom);
         assertThat(Files.readAllLines(pom).stream().map(String::trim))
                 .containsSequence("<a>one</a>", "<b>two</b>", "<c>three</c>");
+    }
+
+    @Test
+    void should_not_leave_blank_lines_when_removing_configuration_elements(@TempDir Path tempDir) throws Exception {
+        Path pom = tempDir.resolve("pom.xml");
+        Files.copy(Paths.get(getClass().getResource("configuration-with-two-elements-pom.xml").toURI()), pom);
+        Model model = Maven.readModel(pom);
+        Xpp3Dom paths = ((Xpp3Dom) model.getBuild().getPlugins().get(0).getConfiguration())
+                .getChild("annotationProcessorPaths");
+        paths.removeChild(0);
+
+        Maven.writeModel(model, pom);
+
+        assertThat(new String(Files.readAllBytes(pom))).contains(
+                "          <annotationProcessorPaths>\n"
+                        + "            <path>\n"
+                        + "              <groupId>org.foo</groupId>\n"
+                        + "              <artifactId>second</artifactId>\n"
+                        + "            </path>\n"
+                        + "          </annotationProcessorPaths>\n");
     }
 
     @Test

@@ -950,6 +950,7 @@ final class MavenJDOMWriter {
             Xpp3Dom[] children = parentDom.getChildren();
             Collection<Xpp3Dom> domChildren = new ArrayList<>(Arrays.asList(children));
 
+            List<Element> elementsToRemove = new ArrayList<>();
             ListIterator<Element> it = parent.getChildren().listIterator();
             while (it.hasNext()) {
                 Element elem = it.next();
@@ -967,9 +968,10 @@ final class MavenJDOMWriter {
                     replaceXpp3DOM(elem, corrDom, counter.newNextDepthLevelCounter());
                     counter.increaseCount();
                 } else {
-                    it.remove();
+                    elementsToRemove.add(elem);
                 }
             }
+            elementsToRemove.forEach(elem -> removeElement(parent, elem));
 
             for (Xpp3Dom dm : domChildren) {
                 Element elem = factory.element(dm.getName(), parent.getNamespace());
@@ -1273,19 +1275,29 @@ final class MavenJDOMWriter {
             counter.increaseCount();
         }
         if (!shouldExist && (element != null)) {
-            int index = parent.indexOf(element);
-            if (index > 0) {
-                Content previous = parent.getContent(index - 1);
-                if (previous instanceof Text) {
-                    Text txt = (Text) previous;
-                    if (txt.getTextTrim().isEmpty()) {
-                        parent.removeContent(txt);
-                    }
-                }
-            }
-            parent.removeContent(element);
+            removeElement(parent, element);
         }
         return element;
+    }
+
+    /**
+     * Remove the element from its parent, along with the whitespace preceding it, so that no blank line is left behind.
+     *
+     * @param parent The parent element
+     * @param element The element to remove
+     */
+    private void removeElement(Element parent, Element element) {
+        int index = parent.indexOf(element);
+        if (index > 0) {
+            Content previous = parent.getContent(index - 1);
+            if (previous instanceof Text) {
+                Text txt = (Text) previous;
+                if (txt.getTextTrim().isEmpty()) {
+                    parent.removeContent(txt);
+                }
+            }
+        }
+        parent.removeContent(element);
     }
 
     /**
