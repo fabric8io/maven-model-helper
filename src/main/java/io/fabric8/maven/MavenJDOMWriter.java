@@ -130,7 +130,7 @@ final class MavenJDOMWriter {
                     innerCounter.setCurrentIndex(element.getContentSize());
                     insertAtPreferredLocation(element, newProperty, innerCounter);
                 } else {
-                    findAndReplaceSimpleElement(innerCounter, element, key, props.getProperty(key), null, false);
+                    findAndReplaceSimpleElement(innerCounter, element, key, props.getProperty(key), null, true);
                 }
             }
             // Remove properties that no longer exist
@@ -170,7 +170,7 @@ final class MavenJDOMWriter {
 
         boolean shouldExist = (text != null) && (preserveEmpty || !text.trim().isEmpty());
         Element element = updateElement(counter, parent, name, shouldExist);
-        if (shouldExist) {
+        if (shouldExist && !text.equals(element.getText())) {
             element.setText(text);
         }
     }
