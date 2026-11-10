@@ -216,6 +216,38 @@ class MavenTest {
     }
 
     @Test
+    void should_preserve_empty_property_when_updating_existing_pom(@TempDir Path tempDir) throws Exception {
+        URL resource = getClass().getResource("properties/empty-property-pom.xml");
+        Path pom = tempDir.resolve("pom.xml");
+        Files.copy(Paths.get(resource.toURI()), pom);
+        Model model = Maven.readModel(pom);
+
+        assertThat(model.getProperties()).containsEntry("argLine", "");
+
+        Maven.writeModel(model);
+
+        XmlAssert.assertThat(pom)
+                .withNamespaceContext(Collections.singletonMap("maven", "http://maven.apache.org/POM/4.0.0"))
+                .valueByXPath("count(//maven:project/maven:properties/maven:argLine)")
+                .isEqualTo(1);
+        assertThat(Maven.readModel(pom).getProperties()).containsEntry("argLine", "");
+        assertThat(pom).content().contains("<argLine />");
+    }
+
+    @Test
+    void should_add_empty_property_when_updating_existing_pom(@TempDir Path tempDir) throws Exception {
+        URL resource = getClass().getResource("properties/empty-property-pom.xml");
+        Path pom = tempDir.resolve("pom.xml");
+        Files.copy(Paths.get(resource.toURI()), pom);
+        Model model = Maven.readModel(pom);
+        model.addProperty("skipTests", "");
+
+        Maven.writeModel(model);
+
+        assertThat(Maven.readModel(pom).getProperties()).containsEntry("skipTests", "");
+    }
+
+    @Test
     void should_save_full_pom_on_new_file(@TempDir Path tempDir) throws Exception {
         URL resource = getClass().getResource("full-pom.xml");
         Path basePom = Paths.get(resource.toURI());
